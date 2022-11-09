@@ -55,12 +55,12 @@
                 <div class="d-flex justify-content-evenly my-sm-5 my-3 product-image">                    
                     <div class="d-sm-flex me-2">
                         {% for item in items_caffeinated_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}
                         {% endfor %}  
                     </div>
                     <div class="d-sm-flex">
                         {% for item in items_caffeinated_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}
                         {% endfor %}  
                     </div>
                 </div>

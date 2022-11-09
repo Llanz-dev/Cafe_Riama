@@ -1,7 +1,17 @@
 from django import forms
 from django import forms
-from .models import Delivery, Collection, Payment
+from .models import Item, Delivery, Collection, Payment
 
+class ItemForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'bg-light'
+
+    class Meta:
+        model = Item
+        fields = '__all__'                
+        
 class DeliveryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeliveryForm, self).__init__(*args, **kwargs)
