@@ -41,7 +41,7 @@
                     {% for product in item.order.items.all %}  
                         <div class="row">
                             <div class="col-md-6 border d-flex justify-content-center flex-column py-1">
-                                <h5>{{ product.item.name }}: {{ product.quantity }}x</h5>
+                                <h5>{{ product.item.name }} ({{ product.hot_cold }}): {{ product.quantity }}x</h5>
                                 <p class="mb-0">{{ product.price }} / pc</p>
                             </div>
                             <div class="col-md-6 border d-flex align-items-center">

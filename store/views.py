@@ -78,11 +78,15 @@ def home(request):
 
 def product_detail(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)      
-            
+    caffeinated = 'hot'
+    price = item.hot_price
     if request.method == 'POST':
-        hot_cold = request.POST.get('hot_cold')        
+        hot_cold = request.POST.get('hot_cold')  
+        if hot_cold == 'cold':
+            caffeinated = 'cold'  
+            price = item.cold_price                      
 
-        order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, price=hot_cold, ordered=False)
+        order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, price=price, hot_cold=caffeinated, ordered=False)
         order_qs = Order.objects.filter(user=request.user, ordered=False)
 
         if order_qs.exists():
