@@ -21,10 +21,14 @@ CATEGORY_CHOICES = (
 )
 
 # Create your models here.
-
 class Item(models.Model):
     name = models.CharField(max_length=50)
-    price = models.PositiveIntegerField()
+    hot_price = models.PositiveIntegerField(default=0)
+    cold_price = models.PositiveIntegerField(default=0)
+    milk = models.PositiveSmallIntegerField(default=20)
+    whip_cream = models.PositiveSmallIntegerField(default=30)
+    syrup_pump = models.PositiveSmallIntegerField(default=20)
+    espresso_shot = models.PositiveSmallIntegerField(default=40)
     discount_price = models.PositiveIntegerField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=17)
     description = models.TextField(blank=True, null=True, default='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi eveniet recusandae. Assumenda ab aliquid deleniti voluptatibus officia. Debitis, quam.')
@@ -51,13 +55,15 @@ class Item(models.Model):
 class OrderItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    price = models.PositiveIntegerField(default=0, blank=True, null=True)
     quantity = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(50)])
+    ordered = models.BooleanField(default=False)
     
     def __str__(self):
         return f'{self.item.name} - {self.quantity}'
 
-    def get_total_item_price(self):
-        return self.quantity * self.item.price  
+    def get_total_item_price(self):   
+        return self.quantity * self.price 
       
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
