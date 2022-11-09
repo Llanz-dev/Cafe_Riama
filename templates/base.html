@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">    
+    {% block file_css %}
+
+    {% endblock file_css %}        
+    <title>Cafe RIAMA</title>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-lg">
+          <a class="navbar-brand" href="{% url 'store:home' %}">Home</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">                                 
+              <li class="nav-item dropdown">
+                <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Categories
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{% url 'store:all-product' %}">All Products</a></li>
+                  <li><a class="dropdown-item" href="">Caffeinated</a></li>
+                  <li><a class="dropdown-item" href="">Coolers</a></li>
+                  <li><a class="dropdown-item" href="">Starters</a></li>
+                  <li><a class="dropdown-item" href="">Silog Meals</a></li>
+                  <li><a class="dropdown-item" href="">Burger w/ Fries</a></li>
+                  <li><a class="dropdown-item" href="">Wings</a></li>
+                  <li><a class="dropdown-item" href="">Pasta</a></li>
+                  <li><a class="dropdown-item" href="">Pizza</a></li>
+                  <li><a class="dropdown-item" href="">Main Course</a></li>
+                  <li><a class="dropdown-item" href="">Sizzlers</a></li>
+                </ul>
+              </li>                           
+              {% if not request.user.is_authenticated %}                                
+              <li class="nav-item">
+                <a href="{% url 'account:sign-in' %}" class="nav-link active">
+                  SignIn
+                </a>
+              </li> 
+              <li class="nav-item">
+                <a href="{% url 'account:sign-up' %}" class="nav-link active">
+                  SignUp
+                </a>
+              </li> 
+              {% else %}
+              <li class="nav-item">
+                <a href="{% url 'store:cart' %}" class="nav-link active">
+                  Cart:                     
+                    {% if order_quantity != None %}
+                      <span class="fw-bold">{{ order_quantity }}</span>
+                    {% else %}
+                      <span class="fw-bold">0</span>
+                    {% endif %}                      
+                </a>
+              </li>         
+              <li class="nav-item">
+                <a href="{% url 'store:pending-orders' %}" class="nav-link active">
+                  Pendings
+                </a>
+              </li> 
+              <li class="nav-item">
+                <a href="{% url 'account:sign-out' %}" class="nav-link active">
+                  SignOut
+                </a>
+              </li> 
+              <li class="nav-item border border-primary">
+                <a class="nav-link active">
+                  {{ request.user.username }}
+                </a>
+              </li> 
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>  
+
+      {% block content %}
+      
+      {% endblock content %}    
+
+    <!-- Footer -->
+    <footer class="w-100 py-4 flex-shrink-0 bg-dark">
+        <div class="container-lg py-4">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <img src="{% static 'products-image/logo/eat-drink.jpg' %}" alt="logo" class="img-fluid">
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-3">Quick links</h5>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="{% url 'store:home' %}">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Get started</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-3">Quick links</h5>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Get started</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="text-white mb-3">Newsletter</h5>
+                    <p class="small text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>                 
+                    <p class="small text-muted mb-0">&copy; Copyrights. All rights reserved. <a class="text-primary" href="#">cafe-riama.com</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>  
+
+    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>     
+    <div class="background-black"> 
+      {% block file_script %}
+
+      {% endblock file_script %}    
+    </div>    
+</body>
+</html>

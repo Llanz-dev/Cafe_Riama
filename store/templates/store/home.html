@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}        
+    <div>
+        <div class="container-lg text-white one py-md-3 py-5">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="col-5">
+                    <h1 class="text-uppercase letter-spacing fw-bold">Cafe RIAMA</h1>
+                    <h3 class="text-uppercase fw-light letter-spacing">Indulge in the high-quality coffee experience.</h3>
+                    <small class="text-muted">It is a long process and well-crafted coffee.</small>
+                </div>
+                <div class="col-5">
+                    <img src="{% static 'products-image/logo/riama-logo.jpg' %}" alt="Coffee logo" class="w-100">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Products -->
+    <div class="background-light">        
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Our Products</h3>
+                <small class="text-muted fst-italic">All Products of Cafe RIAMA</small>                                                       
+                <div class="d-flex justify-content-center my-5"> 
+                    <div class="column">
+                      <img src="{% static 'products-image/coolers/midnight-charcoal.jpg' %}" alt="product image" class="all-product-img rounded">
+                      <img src="{% static 'products-image/coolers/fruit-teas.jpg' %}" alt="product image" class="all-product-img rounded">
+                    </div>
+                    <div class="column">
+                      <img src="{% static 'products-image/main-course/beef-salpicao.jpg' %}" alt="product image" class="all-product-img rounded">
+                      <img src="{% static 'products-image/caffeinated/drink3.jpg' %}" alt="product image" class="all-product-img rounded">
+                    </div>  
+                    <div class="column">
+                      <img src="{% static 'products-image/coolers/drink2.jpg' %}" alt="product image" class="all-product-img rounded">
+                      <img src="{% static 'products-image/foods/foods8.jpg' %}" alt="product image" class="all-product-img rounded">
+                    </div>  
+                    <div class="column">
+                      <img src="{% static 'products-image/foods/foods5.jpg' %}" alt="product image" class="all-product-img rounded">
+                      <img src="{% static 'products-image/foods/foods1.jpg' %}" alt="product image" class="all-product-img rounded">
+                    </div>  
+                  </div>                  
+                <a href="{% url 'store:all-product' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Caffeinated -->
+    <div>
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Caffeinated</h3>
+                <small class="text-muted fst-italic">All Category of Caffeinated</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3 product-image">                    
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_caffeinated_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}  
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_caffeinated_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}  
+                    </div>
+                </div>
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Coolers -->
+    <div class="background-light">
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Coolers</h3>
+                <small class="text-muted fst-italic">All Category of Coolers</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">                        
+                        {% for item in items_frappe_two %}                                                        
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}
+                    </div>
+                    <div class="d-sm-flex">                        
+                        {% for item in items_frappe_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}                                                                         
+                    </div>                    
+                </div>
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Starters -->
+    <div>
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Starters</h3>
+                <small class="text-muted fst-italic">All Category of Starters</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_starters_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}   
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_starters_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}   
+                    </div>                    
+                </div>                
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Silog Meals -->
+    <div class="background-light">
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Silog Meals</h3>
+                <small class="text-muted fst-italic">All Category of Silog Meals</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_silog_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}                                            
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_silog_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}
+                        {% endfor %}  
+                    </div>                    
+                </div>                     
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Burger with Fries -->
+    <div>
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Burger w/ fries</h3>
+                <small class="text-muted fst-italic">All Category of Burger w/ fries</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3 burger-fries-div">                    
+                    {% for item in items_burger_two %}
+                        {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                    {% endfor %}                     
+                </div>
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- All About Wings -->
+    <div class="background-light">
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of All About Wings</h3>
+                <small class="text-muted fst-italic">All Category of All About Wings</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">                        
+                        {% for item in items_wings_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %}                            
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_wings_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %}                            
+                    </div>                    
+                </div>   
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Pasta -->
+    <div>
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Pasta</h3>
+                <small class="text-muted fst-italic">All Category of Pasta</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_pasta_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %}   
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_pasta_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %}   
+                    </div>                    
+                </div> 
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Pizza -->
+    <div class="background-light">
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Pizza</h3>
+                <small class="text-muted fst-italic">All Category of Pizza</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_pizza_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %}  
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_pizza_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %} 
+                    </div>                    
+                </div>                  
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Main Course -->
+    <div>
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Main Course</h3>
+                <small class="text-muted fst-italic">All Category of Main Course</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_main_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %} 
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_main_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %} 
+                    </div>                    
+                </div>                
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+
+    <!-- Sizzlers -->
+    <div class="background-light">
+        <div class="container-lg text-white">
+            <div class="text-center py-5">
+                <h3 class="text-uppercase letter-spacing">Category of Sizzlers</h3>
+                <small class="text-muted fst-italic">All Category of Sizzlers</small>
+                <div class="d-flex justify-content-evenly my-sm-5 my-3">
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_sizzlers_two %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %} 
+                    </div>
+                    <div class="d-sm-flex">
+                        {% for item in items_sizzlers_four %}
+                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
+                        {% endfor %} 
+                    </div>                    
+                </div>
+                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+            </div>
+        </div>      
+    </div>
+{% endblock content %}

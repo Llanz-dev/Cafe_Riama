@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block file_css %}
+    <link rel="stylesheet" href="{% static 'core/styles/checkout.css' %}">
+{% endblock file_css %}    
+
+{% block content %}
+<div class="container-lg my-5">    
+    {% if customer_exists %}                
+        <div class="row justify-content-between">
+            {% if messages %}
+                {% for message in messages %}        
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}                        
+                        <div class="alert alert-danger">
+                          {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <!-- Questions -->
+            <form class="col-md-8 order-1" method="POST">
+                {% csrf_token %}
+                <!-- How would you like to receive your order? -->
+                <div class="mb-5">     
+                    <div class="row justify-content-between mb-4">         
+                        <div class="text-center text-black col-1 rounded-circle bg-white">
+                            <h1>1</h1>
+                        </div>
+                        <div class="col-11 align-self-center">
+                            <h2>How would you like to receive your order?</h2>                
+                        </div>
+                    </div>
+                    <div class="row">
+                      <a href="{% url 'core:delivery' %}" class="text-decoration-none text-white border border-light p-4 col me-2 deliver-collection" id="delivery">
+                          <div>
+                            <img src="{% static 'icons/truck.png' %}" alt="truck icon"> <span>Delivery</span>                        
+                          </div>
+                      </a>
+                      <a href="{% url 'core:collection' %}" class="text-decoration-none text-white border border-secondary p-4 col deliver-collection" id="collection">
+                          <div>
+                            <img src="{% static 'icons/give-money.png' %}" alt="truck icon"> <span>Collection</span>                        
+                          </div>           
+                      </a>
+                    </div> 
+                    <hr class="my-5">
+                </div> 
+                 <!-- Details about delivery -->
+                <div class="row justify-content-between mb-4">         
+                    <div class="rounded-circle text-center text-black bg-white col-1">
+                        <h1>2</h1>
+                    </div>
+                    <div class="col-11 align-self-center">
+                        <h2>Details about delivery</h2>                
+                    </div>
+                </div>              
+                <div class="row">
+                    <div class="row">
+                        <div class="col-md-6" id="delivery-collection-one">
+                            <div class="mb-4">                                
+                                {{ delivery_form.fullname|as_crispy_field }}
+                            </div>
+                            <div class="mb-4">
+                                {{ delivery_form.mobile_number|as_crispy_field }}
+                            </div>
+                            <div class="mb-4">
+                                {{ delivery_form.other_notes|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="delivery-collection-two">
+                            <div class="mb-4">
+                                {{ delivery_form.location|as_crispy_field }}
+                            </div>
+                            <div class="mb-4">
+                                {{ delivery_form.districts|as_crispy_field }}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-3">To ensure proper delivery, use a label:</label>                                
+                                <div class="row justify-content-around">
+                                    <div role="button" class="background-black text-center p-2 border border-secondary delivery-label text-decoration-none text-white col-5" id="office-button">
+                                        <input type="radio" name="home-office" value="office" class="d-none" id="office-input">
+                                        <img src="{% static 'icons/folder.png' %}" alt="folder icon"> Office
+                                    </div>                                
+                                    <div role="button" class="background-black text-center p-2 border border-secondary delivery-label text-decoration-none text-white col-5" id="home-button">
+                                        <input type="radio" name="home-office" value="home" class="d-none" id="home-input">
+                                        <img src="{% static 'icons/home.png' %}" alt="Home icon"> Home
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>      
+                <hr class="my-5">
+                 <!-- Payment -->
+                <div class="row justify-content-between mb-4">         
+                    <div class="rounded-circle text-center text-black bg-white col-1">
+                        <h1>3</h1>
+                    </div>
+                    <div class="col-11 align-self-center">
+                        <h2>Payment</h2>                
+                    </div>
+                </div>   
+                <div id="payment">   
+                    <h5 class="">Subtotal ({{ order_quantity }} items): <span class="fw-bold">₱ {{ sub_total|intcomma }}</span></h5>
+                    <h5 class="delivery-total">Delivery fee: <span class="fw-bold">₱ {{ delivery_fee }}</span></h5>
+                    <h5>Total: <span class="fw-bold">₱ {{ total|intcomma }}</span></h5>
+                    <button type="submit" class="btn btn-primary mt-2" id="yes" value="place-order">Place Order</button>               
+                </div>
+                <hr class="my-5">
+            </form>  
+            <!-- Order Summary -->
+            {% include 'core/sections/order-scroll.html' %}
+        </div>
+    {% else %}
+        {% include 'core/sections/order-first.html' %}
+    {% endif %}
+</div>
+{% endblock content %}
+    
+
+{% block file_script %}
+    <script src="{% static 'core/js/delivery.js' %}"></script>
+{% endblock file_script %}
+    

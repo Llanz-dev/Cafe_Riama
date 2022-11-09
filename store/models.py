@@ -1,0 +1,116 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
+from django.urls import reverse
+from django.utils import timezone
+from django.db import models
+
+CATEGORY_CHOICES = (
+    ('Coffee Classics', 'Coffee Classics'),
+    ('Special Latte', 'Special Latte'),
+    ('Frappe', 'Frappe'),
+    ('Other Drinks', 'Other Drinks'),
+    ('Starters', 'Starters'),
+    ('Silog Meals', 'Silog Meals'),
+    ('Burger with Fries', 'Burger with Fries'),
+    ('All About Wings', 'All About Wings'),
+    ('Pasta', 'Pasta'),
+    ('Pizza', 'Pizza'),
+    ('Main Course', 'Main Course'),
+    ('Sizzlers', 'Sizzlers')
+)
+
+# Create your models here.
+
+class Item(models.Model):
+    name = models.CharField(max_length=50)
+    price = models.PositiveIntegerField()
+    discount_price = models.PositiveIntegerField(blank=True, null=True)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=17)
+    description = models.TextField(blank=True, null=True, default='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi eveniet recusandae. Assumenda ab aliquid deleniti voluptatibus officia. Debitis, quam.')
+    item_slug = models.SlugField(unique=True, default=None)
+    image = models.ImageField(default='constant/cafe.jpg', upload_to='items-img')
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('core:product-detail', kwargs={'item_slug': self.item_slug})
+    
+    def increase_quantity(self):
+        return reverse('core:increase-quantity', kwargs={'item_slug': self.item_slug})    
+    
+    def decrease_quantity(self):
+        return reverse('core:decrease-quantity', kwargs={'item_slug': self.item_slug})    
+
+    def save(self, *args, **kwargs):
+        self.item_slug = slugify(self.name)
+        super(Item, self).save(*args, **kwargs)
+
+
+class OrderItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(50)])
+    
+    def __str__(self):
+        return f'{self.item.name} - {self.quantity}'
+
+    def get_total_item_price(self):
+        return self.quantity * self.item.price  
+      
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItem)
+    start_date = models.DateTimeField(auto_now_add=True)
+    ordered_date = models.DateTimeField(default=timezone.now)
+    ordered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.items.count()}'
+
+DISTRICT_CHOICES = (
+    ('City Proper', 'City Proper'),
+    ('Arevalo', 'Arevalo'),
+    ('La Paz', 'La Paz'),
+    ('Lapuz', 'Lapuz'),
+    ('Mandurriao', 'Mandurriao'),
+    ('Molo', 'Molo')
+)
+
+class Delivery(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, blank=True, null=True)
+    fullname = models.CharField(max_length=80)
+    location = models.CharField(max_length=90)
+    mobile_number = models.CharField(max_length=11)
+    districts = models.CharField(choices=DISTRICT_CHOICES, max_length=11, default='City Proper')
+    label = models.CharField(max_length=20, blank=True, null=True)
+    other_notes = models.TextField(max_length=100, blank=True, null=True)
+
+    def __str__(self): 
+        return f'{self.user.username} - {self.districts}'
+    
+class Collection(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, blank=True, null=True)
+    fullname = models.CharField(max_length=80)
+    mobile_number = models.CharField(max_length=11)
+    other_notes = models.TextField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.fullname}'
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    delivery = models.OneToOneField(Delivery, on_delete=models.CASCADE, blank=True, null=True)
+    collection = models.OneToOneField(Collection, on_delete=models.CASCADE, blank=True, null=True)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, blank=True, null=True)
+    subtotal = models.PositiveIntegerField(blank=True, null=True)
+    delivery_fee = models.PositiveIntegerField(default=0, blank=True, null=True)
+    total = models.PositiveIntegerField(blank=True, null=True)
+    ordered_date = models.DateTimeField(default=timezone.now)    
+    finish_transaction = models.BooleanField(default=False, blank=True, null=True)
+    
+    def __str__(self):
+        return f'{self.total}'

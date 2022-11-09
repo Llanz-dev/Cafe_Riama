@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block file_css %}
+    <!-- Font Awesome icons CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">  
+    <!-- File CSS -->
+    <link rel="stylesheet" href="{% static 'styles/core/all-product.css' %}">    
+{% endblock file_css %}
+    
+
+{% block content %}
+    <div class="container-xl">
+        <!-- Icons -->
+        <div class="d-flex justify-content-md-start flex-wrap">
+            <div class="me-2">     
+                <a href="#caffeinated" class="text-decoration-none text-white mx-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/cup.png' %}" alt="icon">
+                        <p>caffeinated</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#coolers" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                       <img src="{% static 'icons/iced-coffee.png' %}" alt="icon">
+                        <p>coolers</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#starters" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/nachos.png' %}" alt="icon">
+                        <p>starters</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#silog-meals" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/egg.png' %}" alt="icon">
+                        <p>silog meals</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#burger-fries" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/burger.png' %}" alt="icon">
+                        <p>burger fries</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#wings" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/chicken-wings.png' %}" alt="icon">
+                        <p>wings</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#pasta" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/pasta.png' %}" alt="icon">
+                        <p>pasta</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#pizza" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/pizza.png' %}" alt="icon">
+                        <p>pizza</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#main-course" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/main-course.png' %}" alt="icon">
+                        <p>main course</p>
+                    </div>
+                </a>
+            </div>
+            <div class="me-2">     
+                <a href="#sizzlers" class="text-decoration-none text-white m-4">               
+                    <div class="text-center rounded pt-2 px-2 pb-1 grey-transition background-light">                    
+                        <img src="{% static 'icons/sisig.webp' %}" alt="" style="width: 70px; height: 40px;">
+                        <p>sizzlers</p>
+                    </div>
+                </a>
+            </div>        
+        </div>            
+        <!-- Caffeinated -->
+        <h2 class="letter-spacing text-uppercase fw-bold" id="caffeinated">Caffeinated</h2>
+        <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
+        <h4 class="letter-spacing text-uppercase mb-3">Coffee Classics</h4>
+        <div class="d-flex pb-3 flex-wrap">                            
+            {% for item in coffee_classics %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                                        
+        </div>  
+        <!-- Special Latte -->
+        <h4 class="letter-spacing text-uppercase mb-3">Special Latte</h4>
+        <div class="d-flex pb-4 flex-wrap">                
+            {% for item in special_latte %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}  
+        </div>  
+        <h2 class="letter-spacing text-uppercase fw-bold" id="coolers">Coolers</h2>
+        <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>  
+        <!-- Frappe -->
+        <h4 class="letter-spacing text-uppercase mb-3">Frappe</h4>
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in frappe %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}            
+        </div>
+        <!-- Other drinks -->
+        <h4 class="letter-spacing text-uppercase mb-3">Other Drinks</h4>
+        <div class="d-flex pb-4 flex-wrap">                
+            {% for item in other_drinks %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                              
+        </div>
+        <!-- Starters -->
+        <h2 class="letter-spacing text-uppercase fw-bold" id="starters">Starters</h2>
+        <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in starters %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                         
+        </div>  
+        <!-- Silog Meals -->
+        <h4 class="letter-spacing text-uppercase mb-3" id="silog-meals">Silog Meals</h4>
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in silog_meals %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                    
+        </div>  
+        <!-- Burger w/ Fries -->
+        <h4 class="letter-spacing text-uppercase mb-3" id="burger-fries">Burger with Fries</h4>
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in burger_fries %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                                                                                    
+        </div>  
+        <!-- All About Wings -->
+        <h4 class="letter-spacing text-uppercase mb-3" id="wings">All About Wings</h4>
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in wings %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                                                                                
+        </div>  
+        <!-- Pasta -->
+        <h4 class="letter-spacing text-uppercase mb-3" id="pasta">Pasta <span class="text-muted">(good for 2)</span></h4>
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in pasta %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                                                                               
+        </div>  
+        <!-- Pizza -->
+        <h4 class="letter-spacing text-uppercase mb-3" id="pizza">Pizza</h4>
+        <div class="d-flex pb-4 flex-wrap">                
+            {% for item in pizza %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                                                                                   
+        </div>  
+        <!-- Main Course -->
+        <h2 class="letter-spacing text-uppercase fw-bold" id="main-course">Main Course</h2>
+        <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
+        <div class="d-flex pb-3 flex-wrap">                
+            {% for item in main_course %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                    
+        </div>
+        <!-- Sizzlers -->
+        <h4 class="letter-spacing text-uppercase mb-3" id="sizzlers">Sizzlers</h4>
+        <div class="d-flex pb-4 flex-wrap">                
+            {% for item in sizzlers %}
+                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+            {% endfor %}                                                                                                              
+        </div>  
+    </div>
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% load humanize %} 
+
+{% block content %}
+<div class="container my-5">    
+        <h2>Pending orders <span class="text-muted">({{ payment.count }})</span> </h2>
+        <div class="my-4"></div>        
+        {% for item in payment %}                                        
+            <div class="border border-secondary p-2 rounded row my-4"> 
+                {% if item.delivery %}
+                    <div class="col-md-6">                            
+                            <h3 class="mt-2 mb-4">Delivery</h3>                                               
+                            <p>fullname: <span class="bg-secondary py-1 px-2 rounded">{{ item.delivery.fullname }}</span></p>
+                            <p>Location: <span class="bg-secondary py-1 px-2 rounded">{{ item.delivery.location }}</span></p>
+                            <p>Mobile number: <span class="bg-secondary py-1 px-2 rounded">{{ item.delivery.mobile_number }}</span></p>
+                            <p>Districts: <span class="bg-secondary py-1 px-2 rounded">{{ item.delivery.districts }}</span></p>
+                            <p>Label: <span class="bg-secondary py-1 px-2 rounded">{{ item.delivery.label }}</span></p>
+                            <p>Ordered date: <span class="bg-secondary py-1 px-2 rounded">{{ item.ordered_date|date:'F j, Y / g:ia' }}</span></p>
+                            <p>Other notes:                         
+                            {% if item.delivery.other_notes %}
+                            <span class="bg-secondary py-1 px-2 rounded">{{ item.delivery.other_notes }}</span>    
+                            {% endif %}                            
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="col-md-6">                            
+                        <h3 class="mt-2 mb-4">Collection</h3>                                               
+                        <p>fullname: <span class="bg-secondary py-1 px-2 rounded">{{ item.collection.fullname }}</span></p>
+                        <p>Mobile number: <span class="bg-secondary py-1 px-2 rounded">{{ item.collection.mobile_number }}</span></p>
+                        <p>Ordered date: <span class="bg-secondary py-1 px-2 rounded">{{ item.ordered_date|date:'F j, Y / g:ia' }}</span></p>
+                        <p>Other notes:                         
+                            {% if item.collection.other_notes %}
+                            <span class="bg-secondary py-1 px-2 rounded">{{ item.collection.other_notes }}</span>    
+                            {% endif %}                            
+                        </p>
+                    </div>                      
+                {% endif %} 
+                <div class="col-md-6">
+                    <h3 class="mt-2 mb-4">Order list <span class="text-muted">({{ item.order.items.all.count }})</span></h3>                                        
+                        {% for product in item.order.items.all %}                            
+                            <h5>{{ product.item.name }}: {{ product.quantity }}x - ₱ {{ product.get_total_item_price|intcomma }}</h5>
+                        {% endfor %}                           
+                    <h5 class="mt-4">Sub total: ₱ {{ item.subtotal|intcomma }}</h5>                        
+                    <h5>delivery fee: ₱ {{ item.delivery_fee }}</h5>                        
+                    <h4>Total: ₱ <span style="color: rgb(0, 255, 0);">{{ item.total|intcomma }}</span></h4>                        
+                </div>
+            </div>
+        {% endfor %}
+</div>       
+{% endblock content %}
+    
