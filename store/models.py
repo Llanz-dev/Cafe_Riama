@@ -56,6 +56,7 @@ class OrderItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     price = models.PositiveIntegerField(default=0, blank=True, null=True)
+    hot_cold = models.CharField(max_length=4, blank=True, null=True)
     quantity = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(50)])
     ordered = models.BooleanField(default=False)
     
