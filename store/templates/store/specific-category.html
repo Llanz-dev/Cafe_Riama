@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container-lg">
+        <h2 class="letter-spacing text-uppercase fw-bold pt-5" id="starters">{{ items_category }}</h2>
+        <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div> 
+        {% if items_category == 'Caffeinated' %}
+            <h4 class="letter-spacing text-uppercase mb-3">Coffee Classics</h4>
+            <div class="d-flex pb-3 flex-wrap">                            
+                {% for item in coffee_classics %}
+                    {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% endfor %}                                                                        
+            </div>  
+            <br>
+            <h4 class="letter-spacing text-uppercase mb-3">Special Latte</h4>
+            <div class="d-flex pb-3 flex-wrap">                
+                {% for item in special_latte %}
+                    {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% endfor %}  
+            </div>  
+        {% elif items_category == 'Coolers' %}
+            <h4 class="letter-spacing text-uppercase mb-3">Frappe</h4>
+            <div class="d-flex pb-3 flex-wrap">                            
+                {% for item in frappe %}
+                    {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% endfor %}                                                                        
+            </div>  
+            <br>
+            <h4 class="letter-spacing text-uppercase mb-3">Other Drinks</h4>
+            <div class="d-flex pb-3 flex-wrap">                
+                {% for item in other_drinks %}
+                    {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% endfor %}  
+            </div> 
+        {% else %}                                                                 
+            <div class="d-flex pb-3 flex-wrap">                
+                {% for item in categorized_items %}
+                    {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% endfor %}                                                  
+            </div> 
+        {% endif %}
+    </div>
+{% endblock content %}

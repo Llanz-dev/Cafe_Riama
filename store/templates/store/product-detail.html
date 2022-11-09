@@ -26,7 +26,7 @@
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="hot_cold" id="cold" value="cold">
                   <label class="form-check-label" for="flexRadioDefault2">
-                    Cold - <span id="cold-price">{{ caffeinated.cold }}</span>
+                    Cold - <span id="cold-price"></span>
                   </label>
                 </div>                  
                 <h6 class="mt-3">Add ons:</h6>
@@ -55,7 +55,7 @@
                     </label>
                   </div>                
                 <div class="mt-4">
-                <a href="{% url 'core:buy-now' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-primary">Buy Now</a>
+                <a href="{% url 'store:buy-now' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-primary">Buy Now</a>
                 <button class="letter-spacing text-uppercase btn btn-md btn-light">Add to cart</button>
                 <a class="letter-spacing text-uppercase btn btn-md btn-light"><img src="{% static 'bootstrap/icons/heart.svg' %}" alt="Heart icon"></a>                                      
                 </div>
@@ -66,7 +66,7 @@
 
 
 {% block file_script %}
-  <script src="{% static 'core/js/product-detail.js' %}"></script>
+  <script src="{% static 'store/js/product-detail.js' %}"></script>
 {% endblock file_script %}
   
     

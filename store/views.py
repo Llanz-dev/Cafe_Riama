@@ -2,7 +2,6 @@ from .models import Item, OrderItem, Order, Delivery, Collection, Payment
 from .forms import PaymentForm, DeliveryForm, CollectionForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
 
 # Create your views here.
@@ -190,10 +189,6 @@ def cart(request):
         customer_order = order.first()
         all_order = customer_order.items.all().order_by('-id')           
         count_order = customer_order.items.all().count() 
-        print('Customer order:', customer_order.items.all())         
-        for item in customer_order.items.all():
-            if item.item.category == 'Coffee Classics' or item.item.category == 'Special Latte':            
-                print('Item:', item.item.caffeinated_options.hot_cold)          
         
         # Delete the customer in Order table if he or she has no order left in cart.
         order_count = customer_order.items.all().count()
@@ -270,7 +265,8 @@ def delivery(request):
 
     if request.method == 'POST':
         delivery_form = DeliveryForm(request.POST)       
-        office_home = request.POST.get('home-office')                          
+        office_home = request.POST.get('home-office') 
+        print('Office home:', office_home)                         
         if delivery_form.is_valid():
             instance = delivery_form.save(commit=False)
             instance.user = request.user            

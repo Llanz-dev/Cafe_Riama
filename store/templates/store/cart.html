@@ -6,7 +6,7 @@
     <!-- Font Awesome icons CDN -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">  
     <!-- File CSS -->
-    <link rel="stylesheet" href="{% static 'styles/core/cart.css' %}">  
+    <link rel="stylesheet" href="{% static 'styles/store/cart.css' %}">  
 {% endblock file_css %}
 
 {% block content %}        
@@ -27,25 +27,25 @@
                   <div class="col-8">
                     <span class="text-uppercase letter-spacing border px-2">{{ item.item.category }}</span>                                          
                     {% if item.item.category == 'Coffee Classics' or item.item.category == 'Special Latte' %}                                          
-                      <h4 class="mt-2"><a href="{% url 'core:product-detail' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }} ({{ item.item.caffeinated_options.hot_cold }})</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                      <h4 class="mt-2"><a href="{% url 'store:product-detail' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }} ()</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% else %}
-                      <h4 class="mt-2"><a href="{% url 'core:product-detail' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                      <h4 class="mt-2"><a href="{% url 'store:product-detail' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% endif %}
                     <p class="mb-5">{{ item.item.price|intcomma }} / piece</p>
                     <div class="d-flex align-items-center">                      
                       <div class="d-flex align-items-center border border-dark py-1 px-2 rounded bg-secondary">                                                
                         <h5 class="m-0">{{ item.quantity }}</h5>
                         <div class="mx-3"></div>
-                        <a href="{% url 'core:decrease-quantity' item.item.item_slug %}">                        
+                        <a href="{% url 'store:decrease-quantity' item.item.item_slug %}">                        
                           <img src="{% static 'icons/arrow-down.png' %}" alt="arrow icon" class="bg-light p-0 m-0" style="width: 1.4rem;">
                         </a>
                         <div class="mx-1"></div>
-                        <a href="{% url 'core:increase-quantity' item.item.item_slug %}">
+                        <a href="{% url 'store:increase-quantity' item.item.item_slug %}">
                           <img src="{% static 'icons/arrow-up.png' %}" alt="arrow icon" class="bg-light p-0 m-0" style="width: 1.4rem;">
                         </a>
                       </div>
                       <div>
-                        <a href="{% url 'core:remove-product' item.item.item_slug %}" class="text-light mx-4 text-decoration-none">Remove</a>
+                        <a href="{% url 'store:remove-product' item.item.item_slug %}" class="text-light mx-4 text-decoration-none">Remove</a>
                       </div>
                     </div>
                   </div>
@@ -66,7 +66,7 @@
                 <p>Subtotal ({{ count_order }} items)</p>                    
                 <p class="fw-bold">₱ {{ sub_total|intcomma }}</p>                    
               </div>              
-              <a href="{% url 'core:checkout' %}" class="text-decoration-none fw-bold text-primary">
+              <a href="{% url 'store:checkout' %}" class="text-decoration-none fw-bold text-primary">
                 <div class="bg-primary px-4 py-4 d-flex align-items-center justify-content-between text-white rounded">
                     <p class="my-0">Continue to checkout</p>
                     <img src="{% static 'icons/right-arrow.png' %}" alt="right arrow icon" class="bg-white rounded-circle p-2 right-arrow">
@@ -75,7 +75,7 @@
           </div>            
       </div>
       {% else %}
-        {% include 'core/sections/order-first.html' %}
+        {% include 'store/sections/order-first.html' %}
       {% endif %}
     </div> 
 {% endblock content %}

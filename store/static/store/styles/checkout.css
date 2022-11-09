@@ -1,0 +1,33 @@
+.deliver-collection:hover {
+    border: 1px solid rgb(221, 221, 221) !important;
+    transition: .20s;
+}
+
+.deliver-collection-click {
+    border: 1px solid white !important;
+}
+
+.delivery-label {
+    cursor: pointer;
+}
+
+.show {
+    display: block !important; 
+}
+
+.hide {
+    display: none !important; 
+}
+
+.scroll-activate {
+    height: 61vh;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+    .scroll-activate {
+        height: 55vh;
+        margin-bottom: 2rem;
+    }
+  }

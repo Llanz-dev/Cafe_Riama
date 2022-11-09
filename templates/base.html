@@ -31,17 +31,19 @@
                   Categories
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="{% url 'store:all-product' %}">All Products</a></li>
-                  <li><a class="dropdown-item" href="">Caffeinated</a></li>
-                  <li><a class="dropdown-item" href="">Coolers</a></li>
-                  <li><a class="dropdown-item" href="">Starters</a></li>
-                  <li><a class="dropdown-item" href="">Silog Meals</a></li>
-                  <li><a class="dropdown-item" href="">Burger w/ Fries</a></li>
-                  <li><a class="dropdown-item" href="">Wings</a></li>
-                  <li><a class="dropdown-item" href="">Pasta</a></li>
-                  <li><a class="dropdown-item" href="">Pizza</a></li>
-                  <li><a class="dropdown-item" href="">Main Course</a></li>
-                  <li><a class="dropdown-item" href="">Sizzlers</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:all-product' %}">All Products</a></li>                 
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Coffee Classics' %}">Coffee Classics</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Special Latte' %}">Special Latte</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Frappe' %}">Frappe</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Other Drinks' %}">Other Drinks</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Starters' %}">Starters</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Silog Meals' %}">Silog Meals</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Burger with Fries' %}">Burger w/ Fries</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'All About Wings' %}">Wings</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Pasta' %}">Pasta</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Pizza' %}">Pizza</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Main Course' %}">Main Course</a></li>
+                  <li><a class="dropdown-item" href="{% url 'store:specific-category' 'Sizzlers' %}">Sizzlers</a></li>
                 </ul>
               </li>                           
               {% if not request.user.is_authenticated %}                                

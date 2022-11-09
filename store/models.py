@@ -35,13 +35,13 @@ class Item(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('core:product-detail', kwargs={'item_slug': self.item_slug})
+        return reverse('store:product-detail', kwargs={'item_slug': self.item_slug})
     
     def increase_quantity(self):
-        return reverse('core:increase-quantity', kwargs={'item_slug': self.item_slug})    
+        return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    
     
     def decrease_quantity(self):
-        return reverse('core:decrease-quantity', kwargs={'item_slug': self.item_slug})    
+        return reverse('store:decrease-quantity', kwargs={'item_slug': self.item_slug})    
 
     def save(self, *args, **kwargs):
         self.item_slug = slugify(self.name)

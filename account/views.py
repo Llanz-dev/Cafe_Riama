@@ -18,7 +18,7 @@ def sign_in(request):
             if valuenext != '':
                 return redirect(valuenext)            
             else:
-                return redirect('core:home')               
+                return redirect('store:home')               
         else:
             messages.info(request, 'username or password is incorrect')
             
@@ -43,4 +43,4 @@ def sign_up(request):
 
 def sign_out(request):
     logout(request)
-    return redirect('core:home')
+    return redirect('store:home')

@@ -5,7 +5,7 @@
     <!-- Font Awesome icons CDN -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">  
     <!-- File CSS -->
-    <link rel="stylesheet" href="{% static 'styles/core/all-product.css' %}">    
+    <link rel="stylesheet" href="{% static 'styles/store/all-product.css' %}">    
 {% endblock file_css %}
     
 
@@ -100,14 +100,14 @@
         <h4 class="letter-spacing text-uppercase mb-3">Coffee Classics</h4>
         <div class="d-flex pb-3 flex-wrap">                            
             {% for item in coffee_classics %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                        
         </div>  
         <!-- Special Latte -->
         <h4 class="letter-spacing text-uppercase mb-3">Special Latte</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in special_latte %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}  
         </div>  
         <h2 class="letter-spacing text-uppercase fw-bold" id="coolers">Coolers</h2>
@@ -116,14 +116,14 @@
         <h4 class="letter-spacing text-uppercase mb-3">Frappe</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in frappe %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}            
         </div>
         <!-- Other drinks -->
         <h4 class="letter-spacing text-uppercase mb-3">Other Drinks</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in other_drinks %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                              
         </div>
         <!-- Starters -->
@@ -131,42 +131,42 @@
         <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in starters %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                         
         </div>  
         <!-- Silog Meals -->
         <h4 class="letter-spacing text-uppercase mb-3" id="silog-meals">Silog Meals</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in silog_meals %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                    
         </div>  
         <!-- Burger w/ Fries -->
         <h4 class="letter-spacing text-uppercase mb-3" id="burger-fries">Burger with Fries</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in burger_fries %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                    
         </div>  
         <!-- All About Wings -->
         <h4 class="letter-spacing text-uppercase mb-3" id="wings">All About Wings</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in wings %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                
         </div>  
         <!-- Pasta -->
         <h4 class="letter-spacing text-uppercase mb-3" id="pasta">Pasta <span class="text-muted">(good for 2)</span></h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in pasta %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                               
         </div>  
         <!-- Pizza -->
         <h4 class="letter-spacing text-uppercase mb-3" id="pizza">Pizza</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in pizza %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                   
         </div>  
         <!-- Main Course -->
@@ -174,14 +174,14 @@
         <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in main_course %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                    
         </div>
         <!-- Sizzlers -->
         <h4 class="letter-spacing text-uppercase mb-3" id="sizzlers">Sizzlers</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in sizzlers %}
-                {% include 'core/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                              
         </div>  
     </div>
