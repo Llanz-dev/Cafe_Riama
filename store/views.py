@@ -1,5 +1,5 @@
 from .models import Item, OrderItem, Order, Delivery, Collection, Payment
-from .forms import ItemForm, PaymentForm, DeliveryForm, CollectionForm
+from .forms import CaffeinatedForm, PaymentForm, DeliveryForm, CollectionForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -77,35 +77,50 @@ def home(request):
     return render(request, 'store/home.html', context)
 
 def product_detail(request, item_slug):
-    item = Item.objects.get(item_slug=item_slug)      
+    item = Item.objects.get(item_slug=item_slug)  
+    caffeinated_form = CaffeinatedForm(instance=item)    
     caffeinated = 'hot'
     price = item.hot_price
     if request.method == 'POST':
-        hot_cold = request.POST.get('hot_cold')  
-        if hot_cold == 'cold':
-            caffeinated = 'cold'  
-            price = item.cold_price                      
-
-        order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, price=price, hot_cold=caffeinated, ordered=False)
-        order_qs = Order.objects.filter(user=request.user, ordered=False)
-
-        if order_qs.exists():
-            order = order_qs[0]   
-            if order.items.filter(item__item_slug=item.item_slug).exists():
-                print('Order items:', order.items.filter(item__item_slug=item.item_slug))
-                order_item.quantity += 1
-                order_item.save()    
-            else:
-                order.items.add(order_item)        
+        caffeinated_form = CaffeinatedForm(request.POST, instance=item)
+        if caffeinated_form.is_valid():
+            print('Success', caffeinated_form.cleaned_data['hot_cold'])
         else:
-            order = Order.objects.create(user=request.user, ordered=False)                 
-            order.items.add(order_item)     
-            print('Order:', order)
-            print('Order items:', order.items.all())
+            print('Error')
+            
+        return redirect('store:product-detail', item_slug)
+        # if caffeinated_form.is_valid():
+        #     instance = caffeinated_form.save(commit=False)
+        #     instance.hot_cold = hot_cold from request.POST.get()
+        #     instance.milk = True
+        #     print('Caffeinated form:', caffeinated_form.cleaned_data['hot_cold'])    
+            
+        # hot_cold = request.POST.get('hot_cold')  
+       
+        # if hot_cold == 'cold':
+        #     caffeinated = 'cold'  
+        #     price = item.cold_price                      
 
-        return redirect('store:cart')
+        # order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, price=price, hot_cold=caffeinated, ordered=False)
+        # order_qs = Order.objects.filter(user=request.user, ordered=False)
+
+        # if order_qs.exists():
+        #     order = order_qs[0]   
+        #     if order.items.filter(item__item_slug=item.item_slug).exists():
+        #         print('Order items:', order.items.filter(item__item_slug=item.item_slug))
+        #         order_item.quantity += 1
+        #         order_item.save()    
+        #     else:
+        #         order.items.add(order_item)        
+        # else:
+        #     order = Order.objects.create(user=request.user, ordered=False)                 
+        #     order.items.add(order_item)     
+        #     print('Order:', order)
+        #     print('Order items:', order.items.all())
+
+        # return redirect('store:cart')
                    
-    context = {'item': item, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'caffeinated_form': caffeinated_form, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 def all_product(request):
@@ -185,6 +200,9 @@ def cart(request):
         context = {'customer_exists': order.exists()}
         
     return render(request, 'store/cart.html', context)
+
+def update_item(request, item_slug):
+    pass
 
 @login_required
 def decrease_quantity(request, item_slug): 
