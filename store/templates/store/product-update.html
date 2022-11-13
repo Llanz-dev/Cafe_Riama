@@ -17,8 +17,7 @@
                 <hr class="my-5">
                 <h5 class="letter-spacing text-uppercase fw-bold">Options</h5>
                 <div class="my-3" style="height: 3px; width: 70px; background-color: white;"></div>
-                <h6>Hot or Cold*</h6>
-
+                <h6>Hot or Cold* </h6>    
                 {% for choice in caffeinated_form.hot_or_cold %}
                     {% if choice.choice_label == 'Hot' %}
                       <div>
@@ -30,8 +29,14 @@
                       </div>
                     {% endif %} 
                 {% endfor %}
-
-                <h6 class="mt-3">Add ons:</h6>
+                         
+                <!-- <div class="form-check">
+                  <input class="form-check-input" type="radio" name="hot_cold" id="cold" value="cold">
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    Cold - <span id="cold-price">{{ item.cold_price }}</span>
+                  </label>
+                </div> -->
+                 <h6 class="mt-3">Add ons:</h6>
                 <div class="form-check">                                    
                   {% render_field caffeinated_form.milk class='form-check-input' %}   
                   <label class="form-check-label" for="flexCheckChecked">
