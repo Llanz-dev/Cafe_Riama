@@ -1,17 +1,21 @@
+from .models import OrderItem, Delivery, Collection, Payment
 from django import forms
-from django import forms
-from .models import Item, Delivery, Collection, Payment
 
-class ItemForm(forms.ModelForm):
+CHOICES=(('Hot', 'Hot'),
+         ('Cold', 'Cold'))
+
+class CaffeinatedForm(forms.ModelForm):
+    hot_or_cold = forms.ChoiceField(label='', choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-control'}))
+
     def __init__(self, *args, **kwargs):
-        super(ItemForm, self).__init__(*args, **kwargs)
+        super(CaffeinatedForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'bg-light'
 
     class Meta:
-        model = Item
-        fields = '__all__'                
-        
+        model = OrderItem
+        fields = ['hot_or_cold', 'milk', 'whip_cream', 'syrup_pump', 'espresso_shot']
+                        
 class DeliveryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeliveryForm, self).__init__(*args, **kwargs)
