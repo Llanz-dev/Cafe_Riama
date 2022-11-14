@@ -118,15 +118,12 @@ def product_detail(request, item_slug):
                     instance.total_price += item.caffeinated_add.espresso_shot
                                                  
             instance.save()  
-            order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, ordered=False)                            
+            order_item = OrderItem.objects.create(user=request.user, item=item, ordered=False)   
+                                     
             # Check if the customer has already an existing order.
             if order_qs.exists():
                 order = order_qs[0]   
-                if order.items.filter(item__item_slug=item.item_slug).exists():
-                    order_item.quantity += 1
-                    order_item.save()    
-                else:
-                    order.items.add(order_item) 
+                order.items.add(order_item) 
             else:
                 order = Order.objects.create(user=request.user, ordered=False)                 
                 order.items.add(order_item)        
@@ -134,7 +131,7 @@ def product_detail(request, item_slug):
         else:
             print('Error')
             
-        return redirect('store:product-detail', item_slug)              
+        return redirect('store:cart')              
 
         # order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, price=price, hot_cold=caffeinated, ordered=False)
         # order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -158,10 +155,51 @@ def product_detail(request, item_slug):
 
 def product_update(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)
-    order_item = OrderItem.objects.get(user=request.user, item=item)
+    order_item = OrderItem.objects.get(user=request.user, item=item, ordered=False)
     caffeinated_form = CaffeinatedForm(instance=order_item)
-    print('Order item:', order_item)
-    # caffeinated_form = CaffeinatedForm()
+    if request.method == 'POST':
+        caffeinated_form = CaffeinatedForm(request.POST, instance=order_item)
+        order_qs = Order.objects.filter(user=request.user, ordered=False)            
+        if caffeinated_form.is_valid():
+            instance = caffeinated_form.save(commit=False)
+            instance.hot_or_cold = caffeinated_form.cleaned_data['hot_or_cold']           
+            
+            if caffeinated_form.cleaned_data['hot_or_cold'] == 'Hot':
+                instance.price = item.hot_price
+            else:
+                instance.price = item.cold_price
+
+            instance.hot_cold = caffeinated_form.cleaned_data['hot_or_cold']           
+            
+            if caffeinated_form.cleaned_data['milk']:
+                instance.milk = True
+            elif caffeinated_form.cleaned_data['whip_cream']:
+                instance.whip_cream = True
+            elif caffeinated_form.cleaned_data['syrup_pump']:
+                instance.syrup_pump = True
+            elif caffeinated_form.cleaned_data['espresso_shot']:
+                instance.espresso_shot = True     
+
+            add_on_list = [instance.milk, instance.whip_cream, instance.syrup_pump, instance.espresso_shot]
+            instance.total_price = 0
+            
+            for data in range(4):
+                if data == 0 and add_on_list[0]:
+                    instance.total_price += item.caffeinated_add.milk
+                elif data == 1 and add_on_list[1]:
+                    instance.total_price += item.caffeinated_add.whip_cream
+                elif data == 2 and add_on_list[2]:
+                    instance.total_price += item.caffeinated_add.syrup_pump
+                elif data == 3 and add_on_list[3]:
+                    instance.total_price += item.caffeinated_add.espresso_shot
+            print('Total price:', instance.total_price)
+            
+            instance.save()  
+                                                  
+        else:
+            print('Error')
+            
+        return redirect('store:cart')
     
     context = {'item':item, 'caffeinated_form': caffeinated_form, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-update.html', context)
@@ -232,7 +270,7 @@ def cart(request):
     
     if order.exists():
         customer_order = order.first()
-        all_order = customer_order.items.all().order_by('-id')           
+        all_order = customer_order.items.all().order_by('-id')              
         # Delete the customer in Order table if he or she has no order left in cart.
         order_count = customer_order.items.all().count()                      
         if order_count == 0:
