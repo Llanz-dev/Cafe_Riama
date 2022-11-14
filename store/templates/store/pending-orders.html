@@ -48,13 +48,12 @@
                         <div class="row">
                             <div class="col-md-6 border d-flex justify-content-center flex-column py-1">
                                 <h5>{{ product.item.name }} ({{ product.hot_cold }}): {{ product.quantity }}x</h5>
-                                <p class="mb-0">{{ product.price }} / pc</p>   
-                                
+                                <p class="mb-0">{{ product.total_price }} / pc</p>   
+
                                 {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot %}
-                                    <h6 class="mb-0">Add ons:</h6> 
-                                
-                                {% endif %}
-                                    
+                                    <h6 class="mb-0 mt-1">Add ons:</h6>                                 
+                                {% endif %}                            
+
                                 <ul>                                                             
                                     {% if product.milk %}                                                                        
                                         <li><small>Milk - {{ product.item.caffeinated_add.milk }}</small></li> 

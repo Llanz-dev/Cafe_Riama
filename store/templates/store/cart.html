@@ -31,7 +31,7 @@
                     {% else %}
                       <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% endif %}
-                    <p class="mb-5">{{ item.price|intcomma }} / pc</p>
+                    <p class="mb-5">{{ item.total_price|intcomma }} / pc</p>
                     <div class="d-flex align-items-center">                      
                       <div class="d-flex align-items-center border border-dark py-1 px-2 rounded bg-secondary">                                                
                         <h5 class="m-0">{{ item.quantity }}</h5>

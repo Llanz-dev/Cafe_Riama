@@ -80,7 +80,7 @@ class OrderItem(models.Model):
         return f'{self.item.name} - {self.quantity}'
 
     def get_total_item_price(self):   
-        return (self.quantity * self.price) + self.total_price 
+        return self.quantity * self.total_price 
       
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

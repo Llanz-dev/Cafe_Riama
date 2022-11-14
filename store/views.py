@@ -116,18 +116,13 @@ def product_detail(request, item_slug):
                     instance.total_price += item.caffeinated_add.syrup_pump
                 elif data == 3 and add_on_list[3]:
                     instance.total_price += item.caffeinated_add.espresso_shot
-                                                 
-            instance.save()  
-            order_item = OrderItem.objects.create(user=request.user, item=item, ordered=False)   
-                                     
-            # Check if the customer has already an existing order.
-            if order_qs.exists():
-                order = order_qs[0]   
-                order.items.add(order_item) 
-            else:
-                order = Order.objects.create(user=request.user, ordered=False)                 
-                order.items.add(order_item)        
-                print('Success')
+                    
+            instance.total_price += instance.price
+            order, created = Order.objects.get_or_create(user=request.user, ordered=False)                 
+            order.items.add(caffeinated_form.save())        
+                                                   
+            instance.save()                                       
+            print('Success')
         else:
             print('Error')
             
@@ -182,7 +177,6 @@ def product_update(request, item_slug):
 
             add_on_list = [instance.milk, instance.whip_cream, instance.syrup_pump, instance.espresso_shot]
             instance.total_price = 0
-            
             for data in range(4):
                 if data == 0 and add_on_list[0]:
                     instance.total_price += item.caffeinated_add.milk
@@ -192,10 +186,9 @@ def product_update(request, item_slug):
                     instance.total_price += item.caffeinated_add.syrup_pump
                 elif data == 3 and add_on_list[3]:
                     instance.total_price += item.caffeinated_add.espresso_shot
-            print('Total price:', instance.total_price)
-            
-            instance.save()  
-                                                  
+                    
+            instance.total_price += instance.price                    
+            instance.save()                                                    
         else:
             print('Error')
             
@@ -344,7 +337,9 @@ def delivery(request):
 
     # Get the customer orders. Calculate subtotal and total.
     customer_order = order.first() 
-    customer_items = order_items.first()  
+    customer_items = order_items.all() 
+    print('Customer order:', customer_items)
+    
     all_order = customer_order.items.all().order_by('-id') 
     total = delivery_fee + sub_total(request)
     subtotal = sub_total(request)
@@ -359,9 +354,11 @@ def delivery(request):
             instance.label = office_home
             instance.order = customer_order
             if instance.label:  
-                customer_items.ordered = True                                
                 customer_order.ordered = True
-                customer_items.save()
+                # This will make the ordered field equals to True in OrderItem table.
+                for product in customer_items:
+                    product.ordered = True
+                    product.save()
                 customer_order.save()
                 instance.save()
                 Payment.objects.create(user=request.user, delivery=delivery_form.instance, order=customer_order, subtotal=subtotal, delivery_fee=delivery_fee, total=total)  
@@ -381,7 +378,9 @@ def collection(request):
     # Get the customer orders. Calculate subtotal and total.    
     # The subtotal and total is the same due to had no delivery fee charge.
     customer_order = order.first()    
-    order_items = order_items.first()      
+    customer_items = order_items.all() 
+    for data in customer_items:
+        print('Data:', data)     
     all_order = customer_order.items.all().order_by('-id')    
     total = sub_total(request)
     
@@ -395,10 +394,11 @@ def collection(request):
         if collection_form.is_valid():
             instance = collection_form.save(commit=False)
             instance.user = request.user
-            customer_order.ordered = True            
-            order_items.ordered = True            
-            instance.order = customer_order
-            order_items.save()
+            # This will make the ordered field equals to True in OrderItem table.
+            for product in customer_items:
+                product.ordered = True
+                product.save()
+            customer_order.ordered = True
             customer_order.save()
             instance.save()
             Payment.objects.create(user=request.user, collection=collection_form.instance, order=customer_order, subtotal=total, total=total)              
