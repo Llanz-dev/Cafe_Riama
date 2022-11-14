@@ -2,6 +2,12 @@
 {% load static %} 
 {% load humanize %} 
 
+
+{% block file_css %}
+    <link rel="stylesheet" href="{% static 'store/styles/checkout.css' %}">
+{% endblock file_css %}
+    
+
 {% block content %}
 <div class="container my-5">    
         <h2>Pending orders <span class="text-muted">({{ payment.count }})</span> </h2>
@@ -42,7 +48,22 @@
                         <div class="row">
                             <div class="col-md-6 border d-flex justify-content-center flex-column py-1">
                                 <h5>{{ product.item.name }} ({{ product.hot_cold }}): {{ product.quantity }}x</h5>
-                                <p class="mb-0">{{ product.price }} / pc</p>
+                                <p class="mb-0">{{ product.price }} / pc</p>   
+                                <h6 class="mb-0">Add ons:</h6> 
+                                <ul>                                                             
+                                    {% if product.milk %}                                                                        
+                                        <li><small>Milk - {{ product.item.caffeinated_add.milk }}</small></li> 
+                                    {% endif %}                                                                                                                
+                                    {% if product.whip_cream %}
+                                        <li><small>Whip cream - {{ product.item.caffeinated_add.whip_cream }}</small></li> 
+                                    {% endif %}                                                                                                                
+                                    {% if product.syrup_pump %}
+                                        <li><small>Syrup pump - {{ product.item.caffeinated_add.syrup_pump }}</small></li> 
+                                    {% endif %}                                                                                                                
+                                    {% if product.espresso_shot %}
+                                        <li><small>Espresso shot - {{ product.item.caffeinated_add.espresso_shot }}</small></li> 
+                                    {% endif %}                      
+                                </ul>                                                                                          
                             </div>
                             <div class="col-md-6 border d-flex align-items-center">
                                 <h5>₱ {{ product.get_total_item_price|intcomma }}</h5>

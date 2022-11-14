@@ -109,13 +109,13 @@ def product_detail(request, item_slug):
              
             for data in range(4):
                 if data == 0 and add_on_list[0]:
-                    instance.price += item.caffeinated_add.milk
+                    instance.total_price += item.caffeinated_add.milk
                 elif data == 1 and add_on_list[1]:
-                    instance.price += item.caffeinated_add.whip_cream
+                    instance.total_price += item.caffeinated_add.whip_cream
                 elif data == 2 and add_on_list[2]:
-                    instance.price += item.caffeinated_add.syrup_pump
+                    instance.total_price += item.caffeinated_add.syrup_pump
                 elif data == 3 and add_on_list[3]:
-                    instance.price += item.caffeinated_add.espresso_shot
+                    instance.total_price += item.caffeinated_add.espresso_shot
                                                  
             instance.save()  
             order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, ordered=False)                            
@@ -307,7 +307,6 @@ def delivery(request):
     # Get the customer orders. Calculate subtotal and total.
     customer_order = order.first() 
     customer_items = order_items.first()  
-    print('Customer first:', customer_items.ordered)
     all_order = customer_order.items.all().order_by('-id') 
     total = delivery_fee + sub_total(request)
     subtotal = sub_total(request)
@@ -399,7 +398,7 @@ def pending_orders(request):
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
     # The admin has only the access to make the finish_transaction field turns to True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
-    
+
     # If the customer has no order yet.
     if not all_order.exists():
         context = {'customer_exists': all_order.exists()}   

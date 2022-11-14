@@ -71,6 +71,7 @@ class OrderItem(models.Model):
     syrup_pump = models.BooleanField(default=False)
     espresso_shot = models.BooleanField(default=False)
     price = models.PositiveIntegerField(default=0)
+    total_price = models.PositiveIntegerField(default=0)
     hot_cold = models.CharField(max_length=4, default='')
     quantity = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(50)])
     ordered = models.BooleanField(default=False)
@@ -79,7 +80,7 @@ class OrderItem(models.Model):
         return f'{self.item.name} - {self.quantity}'
 
     def get_total_item_price(self):   
-        return self.quantity * self.price 
+        return (self.quantity * self.price) + self.total_price 
       
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
