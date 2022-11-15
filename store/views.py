@@ -60,7 +60,7 @@ def home(request):
                 already_in_cart = order_item                                                          
                 
     for item in items_caffeinated_two:            
-        print(item.name, ':', item.user.filter(username=request.user).exists())
+        print(item.name, ':', item.customer.filter(username=request.user).exists())
         
     context = {
         'already_in_cart': already_in_cart,
@@ -91,7 +91,6 @@ def home(request):
 def product_detail(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)                                        
     caffeinated_form = CaffeinatedForm()
-
     
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -134,7 +133,7 @@ def product_detail(request, item_slug):
                 order, created = Order.objects.get_or_create(user=request.user, ordered=False)                 
                 order.items.add(caffeinated_form.save())   
                 instance.in_cart = True   
-                item.user.add(request.user)
+                item.customer.add(request.user)
                 item.save()                                              
                 instance.save()                                       
                 print('Success')
@@ -309,7 +308,8 @@ def decrease_quantity(request, item_slug):
             order_item.save()
             # If the order item quantity is zero then delete in order item table.
             if order_item.quantity == 0:
-                order_item.delete()                        
+                order_item.delete()     
+                item.customer.remove(request.user)                   
                 
     return redirect('store:cart')         
 
@@ -335,6 +335,7 @@ def increase_quantity(request, item_slug):
 @login_required
 def remove_product(request, item_slug):
     item = get_object_or_404(Item, item_slug=item_slug)    
+    item.customer.remove(request.user)                       
     OrderItem.objects.get(user=request.user, item=item, ordered=False).delete()
     
     return redirect('store:cart')       
