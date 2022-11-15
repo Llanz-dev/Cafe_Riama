@@ -31,6 +31,7 @@ class CaffeinatedAdd(models.Model):
 
 # Create your models here.
 class Item(models.Model):
+    user = models.ManyToManyField(User, blank=True, null=True)
     name = models.CharField(max_length=50)
     hot_price = models.PositiveIntegerField(default=0)
     cold_price = models.PositiveIntegerField(default=0)
@@ -75,6 +76,7 @@ class OrderItem(models.Model):
     hot_cold = models.CharField(max_length=4, default='')
     quantity = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(50)])
     ordered = models.BooleanField(default=False)
+    in_cart = models.BooleanField(default=False)
     
     def __str__(self):
         return f'{self.item.name} - {self.quantity}'
