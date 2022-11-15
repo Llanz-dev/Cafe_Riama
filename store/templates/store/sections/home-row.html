@@ -1,4 +1,10 @@
-<div class="card background-{{ color }} me-3 mb-3 black-transition text-center">
+
+{% if in_cart %}
+  <div class="card background-{{ color }} me-3 mb-3 black-transition text-center border boder-white">
+{% else %}
+  <div class="card background-{{ color }} me-3 mb-3 black-transition text-center">
+{% endif %}
+  
     <a href="{{ item_slug }}" class="text-decoration-none text-white">
         <img src="{{ image_url }}" alt="product image" class="card-img-top">
         <div class="card-body">

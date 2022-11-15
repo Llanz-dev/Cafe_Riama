@@ -54,14 +54,22 @@
                 <small class="text-muted fst-italic">All Category of Caffeinated</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3 product-image">                    
                     <div class="d-sm-flex me-2">
-                        {% for item in items_caffeinated_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}
-                        {% endfor %}  
+                        {% for item in items_caffeinated_two %}                             
+                            {% if request.user in item.user.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% endif %}
+                        {% endfor %}                                                                             
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_caffeinated_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}
-                        {% endfor %}  
+                        {% for item in items_caffeinated_four %}                             
+                            {% if request.user in item.user.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% endif %}
+                        {% endfor %}   
                     </div>
                 </div>
                 <a href="{% url 'store:specific-category' 'Caffeinated' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>

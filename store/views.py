@@ -49,9 +49,21 @@ def home(request):
     items_main_two = Item.objects.filter(category='Main Course')[:2]
     items_main_four = Item.objects.filter(category='Main Course')[2:4]
     items_sizzlers_two = Item.objects.filter(category='Sizzlers')[:2]    
-    items_sizzlers_four = Item.objects.filter(category='Sizzlers')[2:4]   
+    items_sizzlers_four = Item.objects.filter(category='Sizzlers')[2:4]  
+
+    already_in_cart = None
+    customer_order_item = None
+    if request.user.is_authenticated:
+        for item in items_caffeinated_two:
+            order_item = OrderItem.objects.filter(user=request.user, in_cart=True, ordered=False)        
+            if order_item.exists():  
+                already_in_cart = order_item                                                          
+                
+    for item in items_caffeinated_two:            
+        print(item.name, ':', item.user.filter(username=request.user).exists())
         
     context = {
+        'already_in_cart': already_in_cart,
         'items_caffeinated_two': items_caffeinated_two, 
         'items_caffeinated_four': items_caffeinated_four, 
         'items_frappe_two': items_frappe_two, 
@@ -79,54 +91,59 @@ def home(request):
 def product_detail(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)                                        
     caffeinated_form = CaffeinatedForm()
-  
+
+    
     if request.method == 'POST':
-        caffeinated_form = CaffeinatedForm(request.POST)
-        order_qs = Order.objects.filter(user=request.user, ordered=False)            
-        if caffeinated_form.is_valid():
-            instance = caffeinated_form.save(commit=False)
-            instance.user = request.user
-            instance.item = item
-            instance.hot_or_cold = caffeinated_form.cleaned_data['hot_or_cold']           
-            
-            if caffeinated_form.cleaned_data['hot_or_cold'] == 'Hot':
-                instance.price = item.hot_price
+        if request.user.is_authenticated:
+            caffeinated_form = CaffeinatedForm(request.POST)
+            if caffeinated_form.is_valid():
+                instance = caffeinated_form.save(commit=False)
+                instance.user = request.user
+                instance.item = item
+                instance.hot_or_cold = caffeinated_form.cleaned_data['hot_or_cold']           
+
+                if caffeinated_form.cleaned_data['hot_or_cold'] == 'Hot':
+                    instance.price = item.hot_price
+                else:
+                    instance.price = item.cold_price
+
+                instance.hot_cold = caffeinated_form.cleaned_data['hot_or_cold']           
+
+                if caffeinated_form.cleaned_data['milk']:
+                    instance.milk = True
+                elif caffeinated_form.cleaned_data['whip_cream']:
+                    instance.whip_cream = True
+                elif caffeinated_form.cleaned_data['syrup_pump']:
+                    instance.syrup_pump = True
+                elif caffeinated_form.cleaned_data['espresso_shot']:
+                    instance.espresso_shot = True     
+
+                add_on_list = [instance.milk, instance.whip_cream, instance.syrup_pump, instance.espresso_shot]
+
+                for data in range(4):
+                    if data == 0 and add_on_list[0]:
+                        instance.total_price += item.caffeinated_add.milk
+                    elif data == 1 and add_on_list[1]:
+                        instance.total_price += item.caffeinated_add.whip_cream
+                    elif data == 2 and add_on_list[2]:
+                        instance.total_price += item.caffeinated_add.syrup_pump
+                    elif data == 3 and add_on_list[3]:
+                        instance.total_price += item.caffeinated_add.espresso_shot
+
+                instance.total_price += instance.price
+                order, created = Order.objects.get_or_create(user=request.user, ordered=False)                 
+                order.items.add(caffeinated_form.save())   
+                instance.in_cart = True   
+                item.user.add(request.user)
+                item.save()                                              
+                instance.save()                                       
+                print('Success')
             else:
-                instance.price = item.cold_price
+                print('Error')
 
-            instance.hot_cold = caffeinated_form.cleaned_data['hot_or_cold']           
-            
-            if caffeinated_form.cleaned_data['milk']:
-                instance.milk = True
-            elif caffeinated_form.cleaned_data['whip_cream']:
-                instance.whip_cream = True
-            elif caffeinated_form.cleaned_data['syrup_pump']:
-                instance.syrup_pump = True
-            elif caffeinated_form.cleaned_data['espresso_shot']:
-                instance.espresso_shot = True     
-
-            add_on_list = [instance.milk, instance.whip_cream, instance.syrup_pump, instance.espresso_shot]
-             
-            for data in range(4):
-                if data == 0 and add_on_list[0]:
-                    instance.total_price += item.caffeinated_add.milk
-                elif data == 1 and add_on_list[1]:
-                    instance.total_price += item.caffeinated_add.whip_cream
-                elif data == 2 and add_on_list[2]:
-                    instance.total_price += item.caffeinated_add.syrup_pump
-                elif data == 3 and add_on_list[3]:
-                    instance.total_price += item.caffeinated_add.espresso_shot
-                    
-            instance.total_price += instance.price
-            order, created = Order.objects.get_or_create(user=request.user, ordered=False)                 
-            order.items.add(caffeinated_form.save())        
-                                                   
-            instance.save()                                       
-            print('Success')
+            return redirect('store:cart')     
         else:
-            print('Error')
-            
-        return redirect('store:cart')              
+            return redirect('account:sign-in')                      
 
         # order_item, created = OrderItem.objects.get_or_create(user=request.user, item=item, price=price, hot_cold=caffeinated, ordered=False)
         # order_qs = Order.objects.filter(user=request.user, ordered=False)
