@@ -31,7 +31,7 @@ class CaffeinatedAdd(models.Model):
 
 # Create your models here.
 class Item(models.Model):
-    user = models.ManyToManyField(User, blank=True, null=True)
+    customer = models.ManyToManyField(User, blank=True, null=True)
     name = models.CharField(max_length=50)
     hot_price = models.PositiveIntegerField(default=0)
     cold_price = models.PositiveIntegerField(default=0)
@@ -50,8 +50,11 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    def product_detail_url(self):
         return reverse('store:product-detail', kwargs={'item_slug': self.item_slug})
+    
+    def product_update_url(self):
+        return reverse('store:product-update', kwargs={'item_slug': self.item_slug})
     
     def increase_quantity(self):
         return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    
