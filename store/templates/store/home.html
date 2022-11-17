@@ -56,7 +56,7 @@
                     <div class="d-sm-flex me-2">
                         {% for item in items_caffeinated_two %}                             
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_update_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
                             {% else %}
                                 {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
                             {% endif %}
@@ -65,7 +65,7 @@
                     <div class="d-sm-flex">
                         {% for item in items_caffeinated_four %}                             
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_update_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
                             {% else %}
                                 {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
                             {% endif %}

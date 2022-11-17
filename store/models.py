@@ -53,9 +53,6 @@ class Item(models.Model):
     def product_detail_url(self):
         return reverse('store:product-detail', kwargs={'item_slug': self.item_slug})
     
-    def product_update_url(self):
-        return reverse('store:product-update', kwargs={'item_slug': self.item_slug})
-    
     def increase_quantity(self):
         return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    
     

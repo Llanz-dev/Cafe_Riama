@@ -12,9 +12,11 @@
             <form method="POST" class="col-md-6">
                 {% csrf_token %}
                 <h2 class="letter-spacing text-uppercase">{{ item.name }}</h2>
-                <p>{{ item.description }}</p>                    
-                <h3>₱ <span id="product-price">{{ item.hot_price }}</span> (<span id="hot-cold">hot</span>)</h3>
+                <p>{{ item.description }}</p>                                    
+                <h3>₱ <span id="product-price">{{ item.hot_price }}</span> (<span id="hot-cold">Hot</span>)</h3>                  
+
                 <hr class="my-5">
+
                 <h5 class="letter-spacing text-uppercase fw-bold">Options</h5>
                 <div class="my-3" style="height: 3px; width: 70px; background-color: white;"></div>
                 <h6>Hot or Cold*</h6>
@@ -71,5 +73,5 @@
 {% block file_script %}
   <script src="{% static 'store/js/product-detail.js' %}"></script>
 {% endblock file_script %}
-  
+
     

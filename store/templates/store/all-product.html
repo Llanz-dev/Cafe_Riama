@@ -100,7 +100,11 @@
         <h4 class="letter-spacing text-uppercase mb-3">Coffee Classics</h4>
         <div class="d-flex pb-3 flex-wrap">                            
             {% for item in coffee_classics %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                {% endif %}
             {% endfor %}                                                                        
         </div>  
         <!-- Special Latte -->

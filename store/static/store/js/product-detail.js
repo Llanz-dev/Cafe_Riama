@@ -9,10 +9,10 @@ console.log('Cold price:', cold_price.textContent);
 
 hot.onclick = () => {
     document.getElementById('product-price').textContent = hot_price.textContent;
-    hot_cold.textContent = 'hot'
+    hot_cold.textContent = 'Hot'
 }
 
 cold.onclick = () => {
     document.getElementById('product-price').textContent = cold_price.textContent;
-    hot_cold.textContent = 'cold'
+    hot_cold.textContent = 'Cold'
 }

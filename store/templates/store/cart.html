@@ -27,25 +27,25 @@
                   <div class="col-8">
                     <span class="text-uppercase letter-spacing border px-2">{{ item.item.category }}</span>                                          
                     {% if item.item.category == 'Coffee Classics' or item.item.category == 'Special Latte' %}                                          
-                      <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }} ({{ item.hot_cold }})</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                      <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }} ({{ item.hot_cold }})</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% else %}
-                      <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                      <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% endif %}
                     <p class="mb-5">{{ item.total_price|intcomma }} / pc</p>
                     <div class="d-flex align-items-center">                      
                       <div class="d-flex align-items-center border border-dark py-1 px-2 rounded bg-secondary">                                                
                         <h5 class="m-0">{{ item.quantity }}</h5>
                         <div class="mx-3"></div>
-                        <a href="{% url 'store:decrease-quantity' item.item.item_slug %}">                        
+                        <a href="{% url 'store:decrease-quantity' item.item.item_slug item.id %}">                        
                           <img src="{% static 'icons/arrow-down.png' %}" alt="arrow icon" class="bg-light p-0 m-0" style="width: 1.4rem;">
                         </a>
                         <div class="mx-1"></div>
-                        <a href="{% url 'store:increase-quantity' item.item.item_slug %}">
+                        <a href="{% url 'store:increase-quantity' item.item.item_slug item.id %}">
                           <img src="{% static 'icons/arrow-up.png' %}" alt="arrow icon" class="bg-light p-0 m-0" style="width: 1.4rem;">
                         </a>
                       </div>
                       <div>
-                        <a href="{% url 'store:remove-product' item.item.item_slug %}" class="text-light mx-4 text-decoration-none">Remove</a>
+                        <a href="{% url 'store:remove-product' item.item.item_slug item.id %}" class="text-light mx-4 text-decoration-none">Remove</a>
                       </div>
                     </div>
                   </div>
@@ -74,6 +74,7 @@
               </a>
           </div>            
       </div>
+  
       {% else %}
         {% include 'store/sections/order-first.html' %}
       {% endif %}
