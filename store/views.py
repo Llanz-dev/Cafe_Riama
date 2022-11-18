@@ -269,7 +269,7 @@ def specific_category(request, item_category):
         categorized_items = Item.objects.filter(category=item_category)
         items_category = categorized_items.first().category
 
-    context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe}
+    context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe, 'order_quantity': order_quantity(request)}
     return render(request, 'store/specific-category.html', context)    
 
 @login_required
@@ -388,7 +388,7 @@ def delivery(request):
             instance.order = customer_order
             if instance.label:  
                 customer_order.ordered = True
-                # This will make the ordered field equals to True in OrderItem table.
+                # This will make the "ordered" and "in_cart" field equals to True in OrderItem table.            
                 for product in customer_items:
                     product.ordered = True
                     product.in_cart = False
@@ -429,10 +429,14 @@ def collection(request):
         if collection_form.is_valid():
             instance = collection_form.save(commit=False)
             instance.user = request.user
-            # This will make the ordered field equals to True in OrderItem table.
+            # This will make the "ordered" and "in_cart" field equals to True in OrderItem table.
             for product in customer_items:
                 product.ordered = True
+                product.in_cart = False                
                 product.save()
+            # Remove all the product that customer ordered after placing order.
+            for product in Item.objects.filter(customer=request.user):
+                product.customer.remove(request.user)
             customer_order.ordered = True
             customer_order.save()
             instance.save()
@@ -471,10 +475,16 @@ def pending_orders(request):
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
     # The admin has only the access to make the finish_transaction field turns to True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
+    transaction_completed = Payment.objects.filter(user=request.user, finish_transaction=True).order_by('-id') 
+
+    # If the admin click the "finish_transaction" field check and turns this to True.
+    # Then that Order table will be deleted.
+    for data in transaction_completed:
+        data.order.delete()
 
     # If the customer has no order yet.
     if not all_order.exists():
-        context = {'customer_exists': all_order.exists()}   
+        context = {'customer_exists': all_order.exists(), 'order_quantity': order_quantity(request)}   
         return render(request, 'store/delivery.html', context)              
     
     context = {'customer_exists': all_order.exists(), 'all_order': all_order, 'payment': payment, 'order_quantity': order_quantity(request)}
