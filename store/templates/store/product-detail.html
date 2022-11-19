@@ -9,7 +9,7 @@
             <div class="col-md-6">              
                 <img src="{{ item.image.url }}" alt="" class="img-fluid rounded">
             </div>
-            <form method="POST" class="col-md-6">
+            <form method="POST" class="col-md-6 mt-5 mt-md-0">
                 {% csrf_token %}
                 <h2 class="letter-spacing text-uppercase">{{ item.name }}</h2>
                 <p>{{ item.description }}</p>                                    

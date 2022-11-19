@@ -134,6 +134,13 @@ class Collection(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.fullname}'
 
+    def save(self, *args, **kwargs):
+        if '-' not in self.mobile_number:
+            self.mobile_number = '{0}-{1}-{2}'.format(
+                 self.mobile_number[:4], self.mobile_number[4:7], self.mobile_number[7:])
+            # Continue the model saving
+            super(Collection, self).save(*args, **kwargs) 
+
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     delivery = models.OneToOneField(Delivery, on_delete=models.CASCADE, blank=True, null=True)
