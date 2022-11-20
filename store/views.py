@@ -387,8 +387,10 @@ def delivery(request):
         office_home = request.POST.get('home-office') 
         if delivery_form.is_valid():
             instance = delivery_form.save(commit=False)
+            # This set of the customer.
             instance.user = request.user            
             instance.label = office_home
+            # This set of the customer Order table.
             instance.order = customer_order
             if instance.label:  
                 customer_order.ordered = True
@@ -432,7 +434,10 @@ def collection(request):
         collection_form = CollectionForm(request.POST)               
         if collection_form.is_valid():
             instance = collection_form.save(commit=False)
+            # This set of the customer.
             instance.user = request.user
+            # This set of the customer Order table.            
+            instance.order = customer_order
             # This will make the "ordered" and "in_cart" field equals to True in OrderItem table.
             for product in customer_items:
                 product.ordered = True
@@ -477,9 +482,13 @@ def pending_orders(request):
     all_order = Order.objects.filter(user=request.user, ordered=True)  
         
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
-    # The admin has only the access to make the finish_transaction field turns to True.
+    # The admin has only the access to make the finish_transaction field turns into True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
     transaction_completed = Payment.objects.filter(user=request.user, finish_transaction=True).order_by('-id') 
+
+    # Ga cause ang error kong ka duwa ka mag order.
+    # Te tanan to nga OrderItem records ma delete man kay shempre sa line 945 mo nga line
+    # Naka indicate nga "user=request.user, ordered=True, in_cart=False"
         
     # If the admin click the "finish_transaction" field check this will turns into to True.    
     if transaction_completed.exists():
