@@ -485,15 +485,10 @@ def pending_orders(request):
     # The admin has only the access to make the finish_transaction field turns into True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
     transaction_completed = Payment.objects.filter(user=request.user, finish_transaction=True).order_by('-id') 
-
-    # Ga cause ang error kong ka duwa ka mag order.
-    # Te tanan to nga OrderItem records ma delete man kay shempre sa line 945 mo nga line
-    # Naka indicate nga "user=request.user, ordered=True, in_cart=False"
-        
     # If the admin click the "finish_transaction" field check this will turns into to True.    
     if transaction_completed.exists():
         # And all the OrderItem object that has the order of customer will be deleted.
-        customer_order_items = all_order.first().items.filter(user=request.user, ordered=True, in_cart=False)
+        customer_order_items = transaction_completed.first().order.items.all()
         for data in customer_order_items:
             data.delete()
             
