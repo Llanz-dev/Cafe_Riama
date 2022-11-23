@@ -81,7 +81,12 @@ def product_detail(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)                                        
     caffeinated_form = CaffeinatedForm()
     order_item = OrderItem.objects.filter(user=request.user, item=item, ordered=False, in_cart=True)
-    order_item = order_item.first() 
+    
+    # Fix this
+    # print(order_item.exists())
+    # for data in order_item:
+    #     print(data.item.name, data.hot_or_cold)
+    # -----------
     
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -114,26 +119,26 @@ def product_detail(request, item_slug):
                 if caffeinated_form.cleaned_data['espresso_shot']:
                     instance.espresso_shot = True     
                     instance.total_price += item.caffeinated_add.espresso_shot
-
-                if order_item:
-                    # If the customer go back again on the specific product and he or she click again the "Add to Cart" button.
-                    # Then it will check first if he or she still wants to buy the same add-ons.
-                    # If he or she is, then it will just increment the quantity of this product.
-                    if instance.hot_or_cold == order_item.hot_or_cold and order_item.milk == instance.milk and order_item.whip_cream == instance.whip_cream and order_item.syrup_pump == instance.syrup_pump and order_item.espresso_shot == instance.espresso_shot:
-                        order_item.quantity += 1
-                        order_item.save()
-                        return redirect('store:cart')  
-                    # But if not, then it will add a new and the same product with the different add-ons that he or she choose.
-                    else:  
-                        instance.total_price += instance.price
-                        order, created = Order.objects.get_or_create(user=request.user, ordered=False)                 
-                        order.items.add(caffeinated_form.save())   
-                        instance.in_cart = True   
-                        item.customer.add(request.user)
-                        item.save()                                              
-                        instance.save()                                       
-                        return redirect('store:cart')                                                    
-
+                
+                if order_item:                    
+                    # If the the product has only 1 in OrderItem table.
+                    if order_item.count() == 1:
+                        order_item = order_item.last()
+                        # If the customer go back again on the specific product and he or she click again the "Add to Cart" button.
+                        # Then it will check first if he or she still wants to buy the same add-ons.
+                        # If he or she is, then it will just increment the quantity of this product.
+                        if instance.hot_or_cold == order_item.hot_or_cold and order_item.milk == instance.milk and order_item.whip_cream == instance.whip_cream and order_item.syrup_pump == instance.syrup_pump and order_item.espresso_shot == instance.espresso_shot:
+                            order_item.quantity += 1
+                            order_item.save()
+                            return redirect('store:cart')  
+                    # If the the product has only 1 in OrderItem table.             
+                    else:
+                        for data in order_item:
+                            if instance.hot_or_cold == data.hot_or_cold and data.milk == instance.milk and data.whip_cream == instance.whip_cream and data.syrup_pump == instance.syrup_pump and data.espresso_shot == instance.espresso_shot:
+                                data.quantity += 1
+                                data.save()
+                                return redirect('store:cart')      
+                                                                                
                 # This will add to OrderItem table and input whatever the customer added.
                 instance.total_price += instance.price
                 order, created = Order.objects.get_or_create(user=request.user, ordered=False)                 
@@ -168,7 +173,6 @@ def product_detail(request, item_slug):
     return render(request, 'store/product-detail.html', context)
 
 def product_update(request, item_slug, order_item_id):
-    print('ID:', order_item_id)
     item = Item.objects.get(item_slug=item_slug)
     order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)
     
@@ -269,7 +273,7 @@ def specific_category(request, item_category):
         categorized_items = Item.objects.filter(category=item_category)
         items_category = categorized_items.first().category
 
-    context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe}
+    context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe, 'order_quantity': order_quantity(request)}
     return render(request, 'store/specific-category.html', context)    
 
 @login_required
@@ -383,12 +387,14 @@ def delivery(request):
         office_home = request.POST.get('home-office') 
         if delivery_form.is_valid():
             instance = delivery_form.save(commit=False)
+            # This set of the customer.
             instance.user = request.user            
             instance.label = office_home
+            # This set of the customer Order table.
             instance.order = customer_order
             if instance.label:  
                 customer_order.ordered = True
-                # This will make the ordered field equals to True in OrderItem table.
+                # This will make the "ordered" and "in_cart" field equals to True in OrderItem table.            
                 for product in customer_items:
                     product.ordered = True
                     product.in_cart = False
@@ -428,11 +434,18 @@ def collection(request):
         collection_form = CollectionForm(request.POST)               
         if collection_form.is_valid():
             instance = collection_form.save(commit=False)
+            # This set of the customer.
             instance.user = request.user
-            # This will make the ordered field equals to True in OrderItem table.
+            # This set of the customer Order table.            
+            instance.order = customer_order
+            # This will make the "ordered" and "in_cart" field equals to True in OrderItem table.
             for product in customer_items:
                 product.ordered = True
+                product.in_cart = False                
                 product.save()
+            # Remove all the product that customer ordered after placing order.
+            for product in Item.objects.filter(customer=request.user):
+                product.customer.remove(request.user)
             customer_order.ordered = True
             customer_order.save()
             instance.save()
@@ -466,16 +479,27 @@ def thank_you(request):
 @login_required
 def pending_orders(request):
     # This will get all what you ordered and display the information that you input.
-    all_order = Order.objects.filter(user=request.user, ordered=True)    
-    
+    all_order = Order.objects.filter(user=request.user, ordered=True)  
+        
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
-    # The admin has only the access to make the finish_transaction field turns to True.
+    # The admin has only the access to make the finish_transaction field turns into True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
+    transaction_completed = Payment.objects.filter(user=request.user, finish_transaction=True).order_by('-id') 
+    # If the admin click the "finish_transaction" field check this will turns into to True.    
+    if transaction_completed.exists():
+        # And all the OrderItem object that has the order of customer will be deleted.
+        customer_order_items = transaction_completed.first().order.items.all()
+        for data in customer_order_items:
+            data.delete()
+            
+        # Then that Order table will be deleted.
+        for data in transaction_completed:
+            data.order.delete()
 
     # If the customer has no order yet.
     if not all_order.exists():
-        context = {'customer_exists': all_order.exists()}   
+        context = {'customer_exists': all_order.exists(), 'order_quantity': order_quantity(request)}   
         return render(request, 'store/delivery.html', context)              
     
-    context = {'customer_exists': all_order.exists(), 'all_order': all_order, 'payment': payment, 'order_quantity': order_quantity(request)}
+    context = {'all_order': all_order, 'payment': payment, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
     return render(request, 'store/pending-orders.html', context)
