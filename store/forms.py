@@ -25,6 +25,16 @@ class CoolersForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = []
+        
+class StartersForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(StartersForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'bg-light'
+    class Meta:
+        model = OrderItem
+        fields = ['bottled_water']
 
 class DeliveryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

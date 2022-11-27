@@ -116,17 +116,25 @@
                 <small class="text-muted fst-italic">All Category of Starters</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
                     <div class="d-sm-flex me-2">
-                        {% for item in items_starters_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}
-                        {% endfor %}   
+                        {% for item in items_starters_two %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_starters_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}
+                        {% for item in items_starters_four %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% endif %}
                         {% endfor %}   
                     </div>                    
                 </div>                
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Starters' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
@@ -139,17 +147,25 @@
                 <small class="text-muted fst-italic">All Category of Silog Meals</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
                     <div class="d-sm-flex me-2">
-                        {% for item in items_silog_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}
-                        {% endfor %}                                            
+                        {% for item in items_silog_two %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% endif %}
+                        {% endfor %}                                          
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_silog_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}
-                        {% endfor %}  
+                        {% for item in items_silog_four %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>                    
                 </div>                     
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Silog Meals' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
@@ -161,11 +177,15 @@
                 <h3 class="text-uppercase letter-spacing">Category of Burger w/ fries</h3>
                 <small class="text-muted fst-italic">All Category of Burger w/ fries</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3 burger-fries-div">                    
-                    {% for item in items_burger_two %}
-                        {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}
-                    {% endfor %}                     
+                    {% for item in items_burger_two %}                                                        
+                        {% if request.user in item.customer.all %}                                          
+                            {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_burger_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                        {% else %}
+                            {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_burger_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                    {% endif %}
+                {% endfor %}                       
                 </div>
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Burger with Fries' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>

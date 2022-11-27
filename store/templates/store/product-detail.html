@@ -12,9 +12,13 @@
             <form method="POST" class="col-md-6 mt-5 mt-md-0">
                 {% csrf_token %}
                 <h2 class="letter-spacing text-uppercase">{{ item.name }}</h2>
-                <p>{{ item.description }}</p>                                    
-                <h3>₱ <span id="product-price">{{ item.hot_price }}</span> (<span id="hot-cold">Hot</span>)</h3>                  
+                <p>{{ item.description }}</p>       
 
+                {% if item.category == 'Special Latte' or item.category == 'Coffee Classics' %}                             
+                  <h3>₱ <span id="product-price">{{ item.hot_price }}</span> (<span id="hot-cold">Hot</span>)</h3>                  
+                {% else %}
+                  <h3>₱ <span id="product-price">{{ item.hot_price }}</span></h3>                  
+                {% endif %}
                 <hr class="my-5">
                 
                 {% if item.category == 'Special Latte' or item.category == 'Coffee Classics' %}
@@ -38,36 +42,34 @@
                       <div class="form-check">                                    
                         {% render_field caffeinated_form.milk class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Milk - <span id="add-ons-two">{{ item.caffeinated_add.milk }}</span>
+                          Milk - <span id="add-ons-two">{{ caffeinated_add.milk }}</span>
                         </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.whip_cream class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Whip Cream - <span id="add-ons-two">{{ item.caffeinated_add.whip_cream }}</span>
+                          Whip Cream - <span id="add-ons-two">{{ caffeinated_add.whip_cream }}</span>
                         </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.syrup_pump class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Syrup Pump - <span id="add-ons-three">{{ item.caffeinated_add.syrup_pump }}</span>
+                          Syrup Pump - <span id="add-ons-three">{{ caffeinated_add.syrup_pump }}</span>
                         </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.espresso_shot class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Espresso Shot - <span id="add-ons-four">{{ item.caffeinated_add.espresso_shot }}</span>
+                          Espresso Shot - <span id="add-ons-four">{{ caffeinated_add.espresso_shot }}</span>
                         </label>
                       </div> 
-                {% endif item.category == 'Starters' %}
-                  <div class="form-check">                                    
-                    {% render_field caffeinated_form.bottled_water class='form-check-input' %}   
+                {% elif item.category == 'Starters' or item.category == 'Silog Meals' or item.category == 'Burger with Fries' %} 
+                  <div class="form-check">
+                    {% render_field starters_form.bottled_water class='form-check-input' %}   
                     <label class="form-check-label" for="flexCheckChecked">
-                      Milk - <span id="add-ons-two">{{ item.caffeinated_add.milk }}</span>
+                      Bottled Water - <span id="add-ons-four">{{ others_add.bottled_water }}</span>
                     </label>
-                  </div>                      
-                {% else %}
-                  
+                  </div>                                     
                 {% endif %}                                                   
                 <div class="mt-4">
                 <a href="{% url 'store:buy-now' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-primary">Buy Now</a>
