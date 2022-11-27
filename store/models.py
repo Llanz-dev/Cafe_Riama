@@ -28,6 +28,12 @@ class CaffeinatedAdd(models.Model):
     whip_cream = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
     syrup_pump = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
     espresso_shot = models.PositiveSmallIntegerField(default=40, blank=True, null=True)
+    
+class CaffeinatedAdd(models.Model):
+    milk = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+    whip_cream = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
+    syrup_pump = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+    espresso_shot = models.PositiveSmallIntegerField(default=40, blank=True, null=True)
 
 # Create your models here.
 class Item(models.Model):
@@ -41,6 +47,7 @@ class Item(models.Model):
     whip_cream = models.BooleanField(default=False)
     syrup_pump = models.BooleanField(default=False)
     espresso_shot = models.BooleanField(default=False)
+    bottled_water = models.BooleanField(default=False)
     discount_price = models.PositiveIntegerField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=17, blank=True, null=True)
     description = models.TextField(blank=True, null=True, default='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi eveniet recusandae. Assumenda ab aliquid deleniti voluptatibus officia. Debitis, quam.')
@@ -50,8 +57,11 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-    def product_detail_url(self):
-        return reverse('store:product-detail', kwargs={'item_slug': self.item_slug})
+    def detail_caffeinated_url(self):
+        return reverse('store:caffeinated', kwargs={'item_slug': self.item_slug})
+
+    def detail_coolers_url(self):
+        return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
     
     def increase_quantity(self):
         return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    

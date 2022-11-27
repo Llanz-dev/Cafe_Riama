@@ -101,9 +101,9 @@
         <div class="d-flex pb-3 flex-wrap">                            
             {% for item in coffee_classics %}
                 {% if request.user in item.customer.all %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
                 {% else %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
                 {% endif %}
             {% endfor %}                                                                        
         </div>  
@@ -112,9 +112,9 @@
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in special_latte %}
                 {% if request.user in item.customer.all %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
                 {% else %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
                 {% endif %}  
             {% endfor %}  
         </div>  
@@ -124,57 +124,65 @@
         <h4 class="letter-spacing text-uppercase mb-3">Frappe</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in frappe %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                {% endif %} 
             {% endfor %}            
         </div>
         <!-- Other drinks -->
         <h4 class="letter-spacing text-uppercase mb-3">Other Drinks</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in other_drinks %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
-            {% endfor %}                              
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                {% endif %} 
+            {% endfor %}                               
         </div>
         <!-- Starters -->
         <h2 class="letter-spacing text-uppercase fw-bold" id="starters">Starters</h2>
         <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in starters %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                         
         </div>  
         <!-- Silog Meals -->
         <h4 class="letter-spacing text-uppercase mb-3" id="silog-meals">Silog Meals</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in silog_meals %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                    
         </div>  
         <!-- Burger w/ Fries -->
         <h4 class="letter-spacing text-uppercase mb-3" id="burger-fries">Burger with Fries</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in burger_fries %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                    
         </div>  
         <!-- All About Wings -->
         <h4 class="letter-spacing text-uppercase mb-3" id="wings">All About Wings</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in wings %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                
         </div>  
         <!-- Pasta -->
         <h4 class="letter-spacing text-uppercase mb-3" id="pasta">Pasta <span class="text-muted">(good for 2)</span></h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in pasta %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                               
         </div>  
         <!-- Pizza -->
         <h4 class="letter-spacing text-uppercase mb-3" id="pizza">Pizza</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in pizza %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                   
         </div>  
         <!-- Main Course -->
@@ -182,14 +190,14 @@
         <div class="my-4" style="height: 3px; width: 70px; background-color: white;"></div>                                                  
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in main_course %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                    
         </div>
         <!-- Sizzlers -->
         <h4 class="letter-spacing text-uppercase mb-3" id="sizzlers">Sizzlers</h4>
         <div class="d-flex pb-4 flex-wrap">                
             {% for item in sizzlers %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                              
         </div>  
     </div>

@@ -9,86 +9,99 @@
     
 
 {% block content %}
-<div class="container my-5">    
-        <h2>Pending orders <span class="text-muted">({{ payment.count }})</span> </h2>
-        <div class="my-4"></div>        
-        {% for item in payment %}                                        
-            <div class="border border-secondary p-2 rounded row my-4"> 
-                {% if item.delivery %}
-                    <div class="col-md-6">                            
-                            <h3 class="mt-2 mb-4">Delivery</h3>                                               
-                            <p>fullname: <span class="background-light py-1 px-2 rounded">{{ item.delivery.fullname }}</span></p>
-                            <p>Location: <span class="background-light py-1 px-2 rounded">{{ item.delivery.location }}</span></p>
-                            <p>Mobile number: <span class="background-light py-1 px-2 rounded">{{ item.delivery.mobile_number }}</span></p>
-                            <p>Districts: <span class="background-light py-1 px-2 rounded">{{ item.delivery.districts }}</span></p>
-                            <p>Label: <span class="background-light py-1 px-2 rounded">{{ item.delivery.label }}</span></p>
-                            <p>Ordered date: <span class="background-light py-1 px-2 rounded">{{ item.ordered_date|date:'F j, Y / g:ia' }}</span></p>
-                            <p>Other notes:                         
-                            {% if item.delivery.other_notes %}
-                            <span class="background-light py-1 px-2 rounded">{{ item.delivery.other_notes }}</span>    
-                            {% endif %}                            
-                        </p>
-                    </div>
-                {% else %}
-                    <div class="col-md-6">                            
-                        <h3 class="mt-2 mb-4">Collection</h3>                                               
-                        <p>fullname: <span class="background-light py-1 px-2 rounded">{{ item.collection.fullname }}</span></p>
-                        <p>Mobile number: <span class="background-light py-1 px-2 rounded">{{ item.collection.mobile_number }}</span></p>
+<div class="container my-5">
+    <!-- This will count all the pending delivery that you have. -->
+    <h2>Pending orders <span class="text-muted">({{ payment.count }})</span> </h2>
+    <div class="my-4"></div>        
+    {% for item in payment %}                                        
+        <div class="border border-secondary p-2 rounded row my-4"> 
+            {% if item.delivery %}
+                <!-- This will display the information about delivery. -->
+                <div class="col-md-6">                            
+                        <h3 class="mt-2 mb-4">Delivery</h3>                                               
+                        <p>fullname: <span class="background-light py-1 px-2 rounded">{{ item.delivery.fullname }}</span></p>
+                        <p>Location: <span class="background-light py-1 px-2 rounded">{{ item.delivery.location }}</span></p>
+                        <p>Mobile number: <span class="background-light py-1 px-2 rounded">{{ item.delivery.mobile_number }}</span></p>
+                        <p>Districts: <span class="background-light py-1 px-2 rounded">{{ item.delivery.districts }}</span></p>
+                        <p>Label: <span class="background-light py-1 px-2 rounded">{{ item.delivery.label }}</span></p>
                         <p>Ordered date: <span class="background-light py-1 px-2 rounded">{{ item.ordered_date|date:'F j, Y / g:ia' }}</span></p>
                         <p>Other notes:                         
-                            {% if item.collection.other_notes %}
-                                <span class="background-light py-1 px-2 rounded">{{ item.collection.other_notes }}</span>    
+                        {% if item.delivery.other_notes %}
+                        <span class="background-light py-1 px-2 rounded">{{ item.delivery.other_notes }}</span>    
+                        {% endif %}                            
+                    </p>
+                </div>
+            {% else %}
+                <!-- This will display the information about collection. -->
+                <div class="col-md-6">                            
+                    <h3 class="mt-2 mb-4">Collection</h3>                                               
+                    <p>fullname: <span class="background-light py-1 px-2 rounded">{{ item.collection.fullname }}</span></p>
+                    <p>Mobile number: <span class="background-light py-1 px-2 rounded">{{ item.collection.mobile_number }}</span></p>
+                    <p>Ordered date: <span class="background-light py-1 px-2 rounded">{{ item.ordered_date|date:'F j, Y / g:ia' }}</span></p>
+                    <p>Other notes:                         
+                        {% if item.collection.other_notes %}
+                            <span class="background-light py-1 px-2 rounded">{{ item.collection.other_notes }}</span>    
+                        {% endif %}                            
+                    </p>
+                </div>                      
+            {% endif %} 
+            <div class="col-md-6">
+                <h3 class="mt-2 mb-4">Order list <span class="text-muted">({{ item.order.items.all.count }})</span></h3>                                        
+                {% for product in item.order.items.all %}  
+                    <div class="row">
+                        <div class="col-md-6 border d-flex justify-content-center flex-column py-1">                 
+                            <!-- The hot or cold will show if the item category is Coffee Classics or Special Latte. -->
+                            {% if product.item.category == 'Coffee Classics' or product.item.category == 'Special Latte' %}
+                                <h5>{{ product.item.name }} ({{ product.hot_cold }}): {{ product.quantity }}x</h5>                                
+                            {% else %}
+                                <h5>{{ product.item.name }}: {{ product.quantity }}x</h5>                                
+                            {% endif %}                                                                    
+                            <p class="mb-0">{{ product.total_price }} / pc</p>   
+                            
+                            <!-- If there are milk whip cream, syrup pump or espresso shot in Coffee Classics and/or Special Latte category.  -->
+                            <!-- Then the add ons will appear. Line 61. -->
+                            {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot %}
+                                <h6 class="mb-0 mt-1">Add ons:</h6>                                 
                             {% endif %}                            
-                        </p>
-                    </div>                      
-                {% endif %} 
-                <div class="col-md-6">
-                    <h3 class="mt-2 mb-4">Order list <span class="text-muted">({{ item.order.items.all.count }})</span></h3>                                        
-                    {% for product in item.order.items.all %}  
-                        <div class="row">
-                            <div class="col-md-6 border d-flex justify-content-center flex-column py-1">
-                                <h5>{{ product.item.name }} ({{ product.hot_cold }}): {{ product.quantity }}x</h5>
-                                <p class="mb-0">{{ product.total_price }} / pc</p>   
-
-                                {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot %}
-                                    <h6 class="mb-0 mt-1">Add ons:</h6>                                 
-                                {% endif %}                            
-
-                                <ul>                                                             
-                                    {% if product.milk %}                                                                        
-                                        <li><small>Milk - {{ product.item.caffeinated_add.milk }}</small></li> 
-                                    {% endif %}                                                                                                                
-                                    {% if product.whip_cream %}
-                                        <li><small>Whip cream - {{ product.item.caffeinated_add.whip_cream }}</small></li> 
-                                    {% endif %}                                                                                                                
-                                    {% if product.syrup_pump %}
-                                        <li><small>Syrup pump - {{ product.item.caffeinated_add.syrup_pump }}</small></li> 
-                                    {% endif %}                                                                                                                
-                                    {% if product.espresso_shot %}
-                                        <li><small>Espresso shot - {{ product.item.caffeinated_add.espresso_shot }}</small></li> 
-                                    {% endif %}                      
-                                </ul>                                                                                          
-                            </div>
-                            <div class="col-md-6 border d-flex align-items-center">
-                                <h5>₱ {{ product.get_total_item_price|intcomma }}</h5>
-                            </div>
+                            
+                            <!-- Then one of this or all will appear. -->
+                            <ul>                                                             
+                                {% if product.milk %}                                                                        
+                                    <li><small>Milk - {{ product.item.caffeinated_add.milk }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.whip_cream %}
+                                    <li><small>Whip cream - {{ product.item.caffeinated_add.whip_cream }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.syrup_pump %}
+                                    <li><small>Syrup pump - {{ product.item.caffeinated_add.syrup_pump }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.espresso_shot %}
+                                    <li><small>Espresso shot - {{ product.item.caffeinated_add.espresso_shot }}</small></li> 
+                                {% endif %}                      
+                            </ul>                                                                                          
                         </div>
-                    {% endfor %}     
-                    <div class="row mt-2">
-                        <div class="col-md-6">
-                            <h5>Sub total:</h5>
-                            <h5>Delivery fee:</h5>
-                            <h5>Total:</h5>
+                        
+                        <!-- This will display on each total of the item. -->
+                        <div class="col-md-6 border d-flex align-items-center">
+                            <h5>₱ {{ product.get_total_item_price|intcomma }}</h5>
                         </div>
-                        <div class="col-md-6">
-                            <h5>₱ {{ item.subtotal|intcomma }}</h5>
-                            <h5>₱ {{ item.delivery_fee }}</h5>
-                            <h5 style="color: rgb(0, 255, 0);">₱ {{ item.total|intcomma }}</h5>
-                        </div>
+                    </div>
+                {% endfor %}     
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <h5>Sub total:</h5>
+                        <h5>Delivery fee:</h5>
+                        <h5>Total:</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>₱ {{ item.subtotal|intcomma }}</h5>
+                        <h5>₱ {{ item.delivery_fee }}</h5>
+                        <h5 style="color: rgb(0, 255, 0);">₱ {{ item.total|intcomma }}</h5>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+        </div>
+    {% endfor %}
 </div>       
 {% endblock content %}
     

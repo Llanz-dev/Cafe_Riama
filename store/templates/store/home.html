@@ -56,18 +56,18 @@
                     <div class="d-sm-flex me-2">
                         {% for item in items_caffeinated_two %}                             
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
                             {% endif %}
                         {% endfor %}                                                                             
                     </div>
                     <div class="d-sm-flex">
                         {% for item in items_caffeinated_four %}                             
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
                             {% endif %}
                         {% endfor %}   
                     </div>
@@ -87,23 +87,23 @@
                     <div class="d-sm-flex me-2">                        
                         {% for item in items_frappe_two %}                                                        
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
                             {% endif %}
                         {% endfor %}
                     </div>
                     <div class="d-sm-flex">                        
                         {% for item in items_frappe_four %}
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
                             {% endif %}
                         {% endfor %}                                                                         
                     </div>                    
                 </div>
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Coolers' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
