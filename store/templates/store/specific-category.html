@@ -63,13 +63,43 @@
                     {% endif %}  
                 {% endfor %}                                                  
             </div> 
-        {% else %}                                                                 
+        {% elif items_category == 'Frappe' %}                                                                 
             <div class="d-flex pb-3 flex-wrap">  
                 {% for item in categorized_items %}
                     {% if request.user in item.customer.all %}
                         {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
                     {% else %}
                         {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% endif %}  
+                {% endfor %}                                                  
+            </div> 
+        {% elif items_category == 'Starters' %}                                                                 
+            <div class="d-flex pb-3 flex-wrap">  
+                {% for item in categorized_items %}
+                    {% if request.user in item.customer.all %}
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_starters_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% else %}
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_starters_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% endif %}  
+                {% endfor %}                                                  
+            </div> 
+        {% elif items_category == 'Silog Meals' %}                                                                 
+            <div class="d-flex pb-3 flex-wrap">  
+                {% for item in categorized_items %}
+                    {% if request.user in item.customer.all %}
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_silog_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% else %}
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_silog_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% endif %}  
+                {% endfor %}                                                  
+            </div> 
+        {% elif items_category == 'Burger with Fries' %}                                                                 
+            <div class="d-flex pb-3 flex-wrap">  
+                {% for item in categorized_items %}
+                    {% if request.user in item.customer.all %}
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_burger_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% else %}
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_burger_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
                     {% endif %}  
                 {% endfor %}                                                  
             </div> 

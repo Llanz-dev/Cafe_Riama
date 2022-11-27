@@ -23,11 +23,11 @@ CATEGORY_CHOICES = (
 CHOICES=[('Hot', 'Hot'),
          ('Cold', 'Cold')]
 
-class CaffeinatedAdd(models.Model):
-    milk = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
-    whip_cream = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
-    syrup_pump = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
-    espresso_shot = models.PositiveSmallIntegerField(default=40, blank=True, null=True)
+class OthersAdd(models.Model):
+    plain_rice = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+    rice_platter = models.PositiveSmallIntegerField(default=100, blank=True, null=True)
+    aligue_platter = models.PositiveSmallIntegerField(default=120, blank=True, null=True)
+    bottled_water = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
     
 class CaffeinatedAdd(models.Model):
     milk = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
@@ -42,12 +42,6 @@ class Item(models.Model):
     hot_price = models.PositiveIntegerField(default=0)
     cold_price = models.PositiveIntegerField(default=0)
     hot_cold = models.CharField(choices=CHOICES, max_length=5, default='Hot')
-    caffeinated_add = models.ForeignKey(CaffeinatedAdd, blank=True, null=True, on_delete=models.SET_NULL)
-    milk = models.BooleanField(default=False)
-    whip_cream = models.BooleanField(default=False)
-    syrup_pump = models.BooleanField(default=False)
-    espresso_shot = models.BooleanField(default=False)
-    bottled_water = models.BooleanField(default=False)
     discount_price = models.PositiveIntegerField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=17, blank=True, null=True)
     description = models.TextField(blank=True, null=True, default='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia animi eveniet recusandae. Assumenda ab aliquid deleniti voluptatibus officia. Debitis, quam.')
@@ -62,6 +56,15 @@ class Item(models.Model):
 
     def detail_coolers_url(self):
         return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
+    
+    def detail_starters_url(self):
+        return reverse('store:starters', kwargs={'item_slug': self.item_slug})
+    
+    def detail_silog_url(self):
+        return reverse('store:silog-meals', kwargs={'item_slug': self.item_slug})
+    
+    def detail_burger_url(self):
+        return reverse('store:burger-fries', kwargs={'item_slug': self.item_slug})
     
     def increase_quantity(self):
         return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    
@@ -81,6 +84,7 @@ class OrderItem(models.Model):
     whip_cream = models.BooleanField(default=False)
     syrup_pump = models.BooleanField(default=False)
     espresso_shot = models.BooleanField(default=False)
+    bottled_water = models.BooleanField(default=False)
     price = models.PositiveIntegerField(default=0)
     total_price = models.PositiveIntegerField(default=0)
     hot_cold = models.CharField(max_length=4, default='')

@@ -58,25 +58,28 @@
                             {% endif %}                                                                    
                             <p class="mb-0">{{ product.total_price }} / pc</p>   
                             
-                            <!-- If there are milk whip cream, syrup pump or espresso shot in Coffee Classics and/or Special Latte category.  -->
-                            <!-- Then the add ons will appear. Line 61. -->
-                            {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot %}
+                            <!-- If there are add ons in Coffee Classics, Special Latte or in Starters category.  -->
+                            <!-- Then the add ons will appear. Line 63. -->
+                            {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot or product.bottled_water %}
                                 <h6 class="mb-0 mt-1">Add ons:</h6>                                 
                             {% endif %}                            
                             
                             <!-- Then one of this or all will appear. -->
                             <ul>                                                             
                                 {% if product.milk %}                                                                        
-                                    <li><small>Milk - {{ product.item.caffeinated_add.milk }}</small></li> 
+                                    <li><small>Milk - {{ caffeinated_add.milk }}</small></li> 
                                 {% endif %}                                                                                                                
                                 {% if product.whip_cream %}
-                                    <li><small>Whip cream - {{ product.item.caffeinated_add.whip_cream }}</small></li> 
+                                    <li><small>Whip cream - {{ caffeinated_add.whip_cream }}</small></li> 
                                 {% endif %}                                                                                                                
                                 {% if product.syrup_pump %}
-                                    <li><small>Syrup pump - {{ product.item.caffeinated_add.syrup_pump }}</small></li> 
+                                    <li><small>Syrup pump - {{ caffeinated_add.syrup_pump }}</small></li> 
                                 {% endif %}                                                                                                                
                                 {% if product.espresso_shot %}
-                                    <li><small>Espresso shot - {{ product.item.caffeinated_add.espresso_shot }}</small></li> 
+                                    <li><small>Espresso shot - {{ caffeinated_add.espresso_shot }}</small></li> 
+                                {% endif %}                      
+                                {% if product.bottled_water %}
+                                    <li><small>Bottled water - {{ others_add.bottled_water }}</small></li> 
                                 {% endif %}                      
                             </ul>                                                                                          
                         </div>
