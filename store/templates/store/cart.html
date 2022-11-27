@@ -28,6 +28,8 @@
                     <span class="text-uppercase letter-spacing border px-2">{{ item.item.category }}</span>                                          
                     {% if item.item.category == 'Coffee Classics' or item.item.category == 'Special Latte' %}                                          
                       <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }} ({{ item.hot_cold }})</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                    {% elif item.item.category == 'Frappe' or item.item.category == 'Other Drinks' %}
+                      <h4 class="mt-2"><a href="{% url 'store:coolers' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% else %}
                       <h4 class="mt-2"><a href="{% url 'store:product-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
                     {% endif %}

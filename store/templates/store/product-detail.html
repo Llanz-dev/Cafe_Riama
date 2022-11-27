@@ -35,11 +35,11 @@
                     {% endfor %}
                         
                     <h6 class="mt-3">Add ons:</h6>
-                    <div class="form-check">                                    
-                      {% render_field caffeinated_form.milk class='form-check-input' %}   
-                      <label class="form-check-label" for="flexCheckChecked">
-                        Milk - <span id="add-ons-two">{{ item.caffeinated_add.milk }}</span>
-                      </label>
+                      <div class="form-check">                                    
+                        {% render_field caffeinated_form.milk class='form-check-input' %}   
+                        <label class="form-check-label" for="flexCheckChecked">
+                          Milk - <span id="add-ons-two">{{ item.caffeinated_add.milk }}</span>
+                        </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.whip_cream class='form-check-input' %}   
@@ -59,8 +59,15 @@
                           Espresso Shot - <span id="add-ons-four">{{ item.caffeinated_add.espresso_shot }}</span>
                         </label>
                       </div> 
+                {% endif item.category == 'Starters' %}
+                  <div class="form-check">                                    
+                    {% render_field caffeinated_form.bottled_water class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Milk - <span id="add-ons-two">{{ item.caffeinated_add.milk }}</span>
+                    </label>
+                  </div>                      
                 {% else %}
-                  <h2>World</h2>
+                  
                 {% endif %}                                                   
                 <div class="mt-4">
                 <a href="{% url 'store:buy-now' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-primary">Buy Now</a>
