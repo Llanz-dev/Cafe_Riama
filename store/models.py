@@ -50,25 +50,25 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    # URL of this function is for the category of Caffeinated.
     def detail_caffeinated_url(self):
         return reverse('store:caffeinated', kwargs={'item_slug': self.item_slug})
 
+    # URL of this function is for the category of Coolers.
     def detail_coolers_url(self):
         return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
-    
-    def detail_starters_url(self):
-        return reverse('store:starters', kwargs={'item_slug': self.item_slug})
-    
-    def detail_silog_url(self):
-        return reverse('store:silog-meals', kwargs={'item_slug': self.item_slug})
-    
-    def detail_burger_url(self):
-        return reverse('store:burger-fries', kwargs={'item_slug': self.item_slug})
-    
+
+    # URL of the items that are only bottled water is their options.
+    # The categories that are belong to this is the following: Starters, Silog Meals, Burger with Fries, and Pasta.
+    def detail_only_water(self):
+        return reverse('store:detail-only-water', kwargs={'category': self.category, 'item_slug': self.item_slug})
+
+    # URL of this function is for the increase quantity of the items.
     def increase_quantity(self):
         return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    
-    
+
+    # URL of this function is for the decrease quantity of the items.    
     def decrease_quantity(self):
         return reverse('store:decrease-quantity', kwargs={'item_slug': self.item_slug})    
 

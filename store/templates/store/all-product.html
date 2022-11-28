@@ -148,9 +148,9 @@
         <div class="d-flex pb-3 flex-wrap">                
         {% for item in starters %}
             {% if request.user in item.customer.all %}
-                {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_starters_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.hot_price %}                            
             {% else %}
-                {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_starters_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.hot_price %}                                            
             {% endif %} 
         {% endfor %}                                                          
         </div>  
@@ -159,9 +159,9 @@
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in silog_meals %}
                 {% if request.user in item.customer.all %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_silog_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.hot_price %}                            
                 {% else %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_silog_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.hot_price %}                                            
                 {% endif %} 
             {% endfor %}                                                     
         </div>  
@@ -169,7 +169,7 @@
         <h4 class="letter-spacing text-uppercase mb-3" id="burger-fries">Burger with Fries</h4>
         <div class="d-flex pb-3 flex-wrap">                
             {% for item in burger_fries %}
-                {% include 'store/sections/all-product-div.html' with item_slug=item.get_absolute_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% include 'store/sections/all-product-div.html' with item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.price %}                            
             {% endfor %}                                                                                                                    
         </div>  
         <!-- All About Wings -->

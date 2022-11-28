@@ -186,8 +186,9 @@ def detail_coolers(request, item_slug):
     context = {'item': item, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
-def detail_starters(request, item_slug):
-    item = Item.objects.get(item_slug=item_slug)  
+# This kind of detail is only for those items that its add-ons is only bottled water.
+def detail_only_water(request, category, item_slug):
+    item = Item.objects.get(category=category, item_slug=item_slug)  
     starters_form = StartersForm()
     others_add = OthersAdd.objects.all()
     others_add = others_add.first()    
@@ -346,12 +347,12 @@ def all_product(request):
     return render(request, 'store/all-product.html', context)
 
 def specific_category(request, item_category):
-    categorized_items = None
-    items_category = None
+    items_category = None    
     coffee_classics = None
     special_latte = None
     frappe = None
-    other_drinks = None
+    other_drinks = None        
+    categorized_items = None        
     
     if item_category == 'Caffeinated':
         coffee_classics = Item.objects.filter(category='Coffee Classics')
@@ -359,6 +360,9 @@ def specific_category(request, item_category):
         items_category = item_category
     elif item_category == 'Coolers':
         frappe = Item.objects.filter(category='Frappe')
+        other_drinks = Item.objects.filter(category='Other Drinks')
+        items_category = item_category
+    elif item_category == 'Other Drinks':
         other_drinks = Item.objects.filter(category='Other Drinks')
         items_category = item_category
     else:
