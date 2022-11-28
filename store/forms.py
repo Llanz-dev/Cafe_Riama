@@ -26,10 +26,10 @@ class CoolersForm(forms.ModelForm):
         model = OrderItem
         fields = []
         
-class StartersForm(forms.ModelForm):
+class OnlyWaterForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(StartersForm, self).__init__(*args, **kwargs)
+        super(OnlyWaterForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'bg-light'
     class Meta:

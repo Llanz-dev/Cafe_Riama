@@ -1,6 +1,6 @@
 from .models import CaffeinatedAdd, OthersAdd, Item, OrderItem, Order, Delivery, Collection, Payment
 from account.models import Customer
-from .forms import CaffeinatedForm, StartersForm, DeliveryForm, CollectionForm
+from .forms import CaffeinatedForm, OnlyWaterForm, DeliveryForm, CollectionForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -189,13 +189,13 @@ def detail_coolers(request, item_slug):
 # This kind of detail is only for those items that its add-ons is only bottled water.
 def detail_only_water(request, category, item_slug):
     item = Item.objects.get(category=category, item_slug=item_slug)  
-    starters_form = StartersForm()
+    starters_form = OnlyWaterForm()
     others_add = OthersAdd.objects.all()
     others_add = others_add.first()    
 
     if request.method == 'POST':        
         if request.user.is_authenticated:
-            starters_form = StartersForm(request.POST)
+            starters_form = OnlyWaterForm(request.POST)
             if starters_form.is_valid():
                 instance = starters_form.save(commit=False)
                 instance.user = request.user
@@ -288,15 +288,15 @@ def caffeinated_update(request, item_slug, order_item_id):
     return render(request, 'store/product-update.html', context)
 
 @login_required
-def starters_update(request, item_slug, order_item_id):
-    item = Item.objects.get(item_slug=item_slug)
+def only_water_update(request, category, item_slug, order_item_id):
+    item = Item.objects.get(category=category, item_slug=item_slug)
     order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)    
-    starters_form = StartersForm(instance=order_item)
+    starters_form = OnlyWaterForm(instance=order_item)
     others_add = OthersAdd.objects.all()
     others_add = others_add.first()
 
     if request.method == 'POST':
-        starters_form = StartersForm(request.POST, instance=order_item)
+        starters_form = OnlyWaterForm(request.POST, instance=order_item)
         if starters_form.is_valid():
             instance = starters_form.save(commit=False)   
 

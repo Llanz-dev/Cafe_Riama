@@ -86,7 +86,7 @@
                 {% endfor %}                                                  
             </div> 
         <!-- Starters, Burger with Fries, Silog Meals and Pasta has having the same only bottled water of add-ons. -->
-        {% elif items_category == 'Starters' or items_category == 'Burger with Fries' or items_category == 'Silog Meals' %}                                                                 
+        {% elif items_category == 'Starters' or items_category == 'Burger with Fries' or items_category == 'Silog Meals' or items_category == 'Pasta' %}                                                                 
             <div class="d-flex pb-3 flex-wrap">  
                 {% for item in categorized_items %}
                     {% if request.user in item.customer.all %}
