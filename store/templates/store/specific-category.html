@@ -12,9 +12,9 @@
             <div class="d-flex pb-3 flex-wrap">     
                 {% for item in coffee_classics %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}                                                                                      
             </div>  
@@ -23,21 +23,32 @@
             <div class="d-flex pb-3 flex-wrap">                
                 {% for item in special_latte %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %} 
                 {% endfor %}  
             </div>  
+        <!-- This will show if you click the "Coffee Classics" or "Special Latte" on the dropdown navbar. -->
+        {% elif items_category == 'Coffee Classics' or items_category == 'Special Latte' %}
+        <div class="d-flex pb-3 flex-wrap">  
+            {% for item in categorized_items %}
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                                            
+                {% endif %}  
+            {% endfor %}                                                  
+        </div> 
+        <!-- This will show if you click the "see more" link on the home page in the category of coolers. line 106. -->
         {% elif items_category == 'Coolers' %}
-            <!-- This will show if you click the "see more" link on the home page in the category of coolers. line 106. -->
             <h4 class="letter-spacing text-uppercase mb-3">Frappe</h4>
             <div class="d-flex pb-3 flex-wrap">                            
                 {% for item in frappe %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %} 
                 {% endfor %}                                                                        
             </div>  
@@ -46,63 +57,68 @@
             <div class="d-flex pb-3 flex-wrap">                
                 {% for item in other_drinks %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}  
             </div> 
-        {% elif items_category == 'Coffee Classics' or items_category == 'Special Latte' %}
-            <!-- This will show if you click the "Coffee Classics" or "Special Latte" on the dropdown navbar -->
-            <div class="d-flex pb-3 flex-wrap">  
-                {% for item in categorized_items %}
-                    {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
-                    {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
-                    {% endif %}  
-                {% endfor %}                                                  
-            </div> 
+        <!-- This div is for the Other Drinks category. -->
+        {% elif items_category == 'Other Drinks' %}   
+        <div class="d-flex pb-3 flex-wrap">  
+            {% for item in other_drinks %}
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
+                {% endif %}  
+            {% endfor %}                                                  
+        </div> 
+        <!-- This div is for the Frappe category. -->
         {% elif items_category == 'Frappe' %}                                                                 
             <div class="d-flex pb-3 flex-wrap">  
                 {% for item in categorized_items %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}                                                  
             </div> 
-        {% elif items_category == 'Starters' %}                                                                 
+        <!-- Starters, Burger with Fries, Silog Meals and Pasta has having the same only bottled water of add-ons. -->
+        {% elif items_category == 'Starters' or items_category == 'Burger with Fries' or items_category == 'Silog Meals' or items_category == 'Pasta' %}                                                                 
             <div class="d-flex pb-3 flex-wrap">  
                 {% for item in categorized_items %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_starters_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_only_water_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_starters_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_only_water_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}                                                  
-            </div> 
-        {% elif items_category == 'Silog Meals' %}                                                                 
-            <div class="d-flex pb-3 flex-wrap">  
-                {% for item in categorized_items %}
-                    {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_silog_url image_url=item.image.url name=item.name price=item.hot_price %}                            
-                    {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_silog_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
-                    {% endif %}  
-                {% endfor %}                                                  
-            </div> 
-        {% elif items_category == 'Burger with Fries' %}                                                                 
-            <div class="d-flex pb-3 flex-wrap">  
-                {% for item in categorized_items %}
-                    {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_burger_url image_url=item.image.url name=item.name price=item.hot_price %}                            
-                    {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_burger_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
-                    {% endif %}  
-                {% endfor %}                                                  
-            </div> 
-        {% endif %}
+            </div>    
+        <!-- This div is for the All About Wings category. -->
+        {% elif items_category == 'Pizza' %}                                                                 
+        <div class="d-flex pb-3 flex-wrap">  
+            {% for item in categorized_items %}
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_pizza_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_pizza_url image_url=item.image.url name=item.name price=item.price %}                                            
+                {% endif %}  
+            {% endfor %}    
+        <!-- This div is for the following categories: All About Wings, Main Course and Sizzlers. -->
+        {% elif items_category == 'All About Wings' or items_category == 'Main Course' or items_category == 'Sizzlers' %}                                                                 
+        <div class="d-flex pb-3 flex-wrap">  
+            {% for item in categorized_items %}
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_main_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_main_url image_url=item.image.url name=item.name price=item.price %}                                            
+                {% endif %}  
+            {% endfor %}    
+        {% else %}
+            <h2>Something went wrong...</h2>
+        {% endif %}                                              
+        </div> 
     </div>
 {% endblock content %}

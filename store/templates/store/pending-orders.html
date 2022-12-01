@@ -58,29 +58,59 @@
                             {% endif %}                                                                    
                             <p class="mb-0">{{ product.total_price }} / pc</p>   
                             
-                            <!-- If there are add ons in Coffee Classics, Special Latte or in Starters category.  -->
+                            <!-- If there are add ons in each category.  -->
                             <!-- Then the add ons will appear. Line 63. -->
-                            {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot or product.bottled_water %}
+                            {% if product.milk or product.whip_cream or product.syrup_pump or product.espresso_shot or product.bottled_water or product.bacon or product.pepperoni or product.ham or product.cheese %}
                                 <h6 class="mb-0 mt-1">Add ons:</h6>                                 
                             {% endif %}                            
                             
-                            <!-- Then one of this or all will appear. -->
-                            <ul>                                                             
+                            <!-- One of the this add ons or all will appear. -->
+                            <!-- Depending on the customer add-ons chosen. -->
+                            <ul>          
+                                <!-- Caffeinated add-ons. -->
                                 {% if product.milk %}                                                                        
-                                    <li><small>Milk - {{ caffeinated_add.milk }}</small></li> 
+                                    <li><small>Milk - {{ add_on.milk }}</small></li> 
                                 {% endif %}                                                                                                                
                                 {% if product.whip_cream %}
-                                    <li><small>Whip cream - {{ caffeinated_add.whip_cream }}</small></li> 
+                                    <li><small>Whip cream - {{ add_on.whip_cream }}</small></li> 
                                 {% endif %}                                                                                                                
                                 {% if product.syrup_pump %}
-                                    <li><small>Syrup pump - {{ caffeinated_add.syrup_pump }}</small></li> 
+                                    <li><small>Syrup pump - {{ add_on.syrup_pump }}</small></li> 
                                 {% endif %}                                                                                                                
                                 {% if product.espresso_shot %}
-                                    <li><small>Espresso shot - {{ caffeinated_add.espresso_shot }}</small></li> 
-                                {% endif %}                      
+                                    <li><small>Espresso shot - {{ add_on.espresso_shot }}</small></li> 
+                                {% endif %}                                                   
+                                <!-- Pizza add-ons. -->
+                                {% if product.bacon %}                                                                        
+                                    <li><small>Bacon - {{ add_on.bacon }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.pepperoni %}
+                                    <li><small>Pepperoni - {{ add_on.pepperoni }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.ham %}
+                                    <li><small>Ham - {{ add_on.ham }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.cheese %}
+                                    <li><small>Cheese - {{ add_on.cheese }}</small></li> 
+                                {% endif %}      
+                                <!-- All About Wings, Main Course, and Sizzlers add-ons. -->
+                                {% if product.plain_rice %}
+                                    <li><small>Plain rice - {{ add_on.plain_rice }}</small></li> 
+                                {% endif %}                                                                                                                                                           
+                                {% if product.rice_platter %}
+                                    <li><small>Rice platter - {{ add_on.rice_platter }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.aligue_platter %}
+                                    <li><small>Ham - {{ add_on.aligue_platter }}</small></li> 
+                                {% endif %}                                                                                                                
+                                {% if product.cheese %}
+                                    <li><small>Cheese - {{ add_on.cheese }}</small></li> 
+                                {% endif %}  
+                                <!-- Starters, Silog Meals, Burger with Fries and Pasta add-ons. -->
+                                <!-- Or even on main 3 dishes. -->
                                 {% if product.bottled_water %}
-                                    <li><small>Bottled water - {{ others_add.bottled_water }}</small></li> 
-                                {% endif %}                      
+                                    <li><small>Bottled water - {{ add_on.bottled_water }}</small></li> 
+                                {% endif %}                                                                  
                             </ul>                                                                                          
                         </div>
                         

@@ -23,22 +23,28 @@ CATEGORY_CHOICES = (
 CHOICES=[('Hot', 'Hot'),
          ('Cold', 'Cold')]
 
-class OthersAdd(models.Model):
+class AddOn(models.Model):
     plain_rice = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+    rice_platter = models.PositiveSmallIntegerField(default=100, blank=True, null=True)
+    aligue_platter = models.PositiveSmallIntegerField(default=120, blank=True, null=True)
+    milk = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+    whip_cream = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
+    syrup_pump = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+    espresso_shot = models.PositiveSmallIntegerField(default=40, blank=True, null=True)    
+    bacon = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
+    pepperoni = models.PositiveSmallIntegerField(default=40, blank=True, null=True)
+    ham = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
+    cheese = models.PositiveSmallIntegerField(default=50, blank=True, null=True)
+    plain_rice = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
     rice_platter = models.PositiveSmallIntegerField(default=100, blank=True, null=True)
     aligue_platter = models.PositiveSmallIntegerField(default=120, blank=True, null=True)
     bottled_water = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
     
-class CaffeinatedAdd(models.Model):
-    milk = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
-    whip_cream = models.PositiveSmallIntegerField(default=30, blank=True, null=True)
-    syrup_pump = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
-    espresso_shot = models.PositiveSmallIntegerField(default=40, blank=True, null=True)
-
 # Create your models here.
 class Item(models.Model):
     customer = models.ManyToManyField(User, blank=True, null=True)
     name = models.CharField(max_length=50)
+    price = models.PositiveIntegerField(default=0)    
     hot_price = models.PositiveIntegerField(default=0)
     cold_price = models.PositiveIntegerField(default=0)
     hot_cold = models.CharField(choices=CHOICES, max_length=5, default='Hot')
@@ -50,25 +56,37 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    # URL of this function is for the category of Caffeinated.
     def detail_caffeinated_url(self):
         return reverse('store:caffeinated', kwargs={'item_slug': self.item_slug})
 
+    # URL of this function is for the category of Coolers.
     def detail_coolers_url(self):
         return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
     
-    def detail_starters_url(self):
-        return reverse('store:starters', kwargs={'item_slug': self.item_slug})
+    # URL of this function is for the category of Coolers.
+    def detail_coolers_url(self):
+        return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
+
+    # URL of the items that are only bottled water is their options.
+    # The categories that are belong to this is the following: Starters, Silog Meals, Burger with Fries, and Pasta.
+    def detail_only_water_url(self):
+        return reverse('store:detail-only-water', kwargs={'category': self.category, 'item_slug': self.item_slug})
+
+    # URL of this function is for the category of Pizza.    
+    def detail_pizza_url(self):
+        return reverse('store:pizza', kwargs={'item_slug': self.item_slug})
     
-    def detail_silog_url(self):
-        return reverse('store:silog-meals', kwargs={'item_slug': self.item_slug})
+    # URL of this function is for the categories of the following: All About Wings, Main Course and Sizzlers.    
+    def detail_main_url(self):
+        return reverse('store:main', kwargs={'item_slug': self.item_slug})
     
-    def detail_burger_url(self):
-        return reverse('store:burger-fries', kwargs={'item_slug': self.item_slug})
-    
+    # URL of this function is for the increase quantity of the items.
     def increase_quantity(self):
         return reverse('store:increase-quantity', kwargs={'item_slug': self.item_slug})    
-    
+
+    # URL of this function is for the decrease quantity of the items.    
     def decrease_quantity(self):
         return reverse('store:decrease-quantity', kwargs={'item_slug': self.item_slug})    
 
@@ -84,6 +102,13 @@ class OrderItem(models.Model):
     whip_cream = models.BooleanField(default=False)
     syrup_pump = models.BooleanField(default=False)
     espresso_shot = models.BooleanField(default=False)
+    bacon = models.BooleanField(default=False)
+    pepperoni = models.BooleanField(default=False)
+    ham = models.BooleanField(default=False)
+    cheese = models.BooleanField(default=False)
+    plain_rice = models.BooleanField(default=False)
+    rice_platter = models.BooleanField(default=False)
+    aligue_platter = models.BooleanField(default=False)
     bottled_water = models.BooleanField(default=False)
     price = models.PositiveIntegerField(default=0)
     total_price = models.PositiveIntegerField(default=0)

@@ -56,18 +56,18 @@
                     <div class="d-sm-flex me-2">
                         {% for item in items_caffeinated_two %}                             
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}                                                                             
                     </div>
                     <div class="d-sm-flex">
                         {% for item in items_caffeinated_four %}                             
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_caffeinated_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}   
                     </div>
@@ -87,18 +87,18 @@
                     <div class="d-sm-flex me-2">                        
                         {% for item in items_frappe_two %}                                                        
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}
                     </div>
                     <div class="d-sm-flex">                        
                         {% for item in items_frappe_four %}
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_coolers_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}                                                                         
                     </div>                    
@@ -118,18 +118,18 @@
                     <div class="d-sm-flex me-2">
                         {% for item in items_starters_two %}                                                        
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}
                     </div>
                     <div class="d-sm-flex">
                         {% for item in items_starters_four %}                                                        
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_starters_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}   
                     </div>                    
@@ -149,18 +149,18 @@
                     <div class="d-sm-flex me-2">
                         {% for item in items_silog_two %}                                                        
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}                                          
                     </div>
                     <div class="d-sm-flex">
                         {% for item in items_silog_four %}                                                        
                             {% if request.user in item.customer.all %}                                          
-                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
                             {% else %}
-                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_silog_url color='black' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
                             {% endif %}
                         {% endfor %}
                     </div>                    
@@ -179,9 +179,9 @@
                 <div class="d-flex justify-content-evenly my-sm-5 my-3 burger-fries-div">                    
                     {% for item in items_burger_two %}                                                        
                         {% if request.user in item.customer.all %}                                          
-                            {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_burger_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                                            
+                            {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
                         {% else %}
-                            {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_burger_url color='light' image_url=item.image.url name=item.name price=item.hot_price %}                                
+                            {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
                     {% endif %}
                 {% endfor %}                       
                 </div>
@@ -197,18 +197,26 @@
                 <h3 class="text-uppercase letter-spacing">Category of All About Wings</h3>
                 <small class="text-muted fst-italic">All Category of All About Wings</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
-                    <div class="d-sm-flex me-2">                        
-                        {% for item in items_wings_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %}                            
+                    <div class="d-sm-flex me-2">
+                        {% for item in items_wings_two %}                    
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}                                          
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_wings_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %}                            
-                    </div>                    
+                        {% for item in items_wings_four %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}
+                    </div>                   
                 </div>   
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'All About Wings' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
@@ -221,17 +229,25 @@
                 <small class="text-muted fst-italic">All Category of Pasta</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
                     <div class="d-sm-flex me-2">
-                        {% for item in items_pasta_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %}   
+                        {% for item in items_pasta_two %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}                                          
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_pasta_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %}   
+                        {% for item in items_pasta_four %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_only_water_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>                    
                 </div> 
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Pasta' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
@@ -244,17 +260,25 @@
                 <small class="text-muted fst-italic">All Category of Pizza</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
                     <div class="d-sm-flex me-2">
-                        {% for item in items_pizza_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %}  
+                        {% for item in items_pizza_two %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_pizza_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_pizza_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_pizza_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %} 
+                        {% for item in items_pizza_four %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_pizza_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_pizza_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>                    
                 </div>                  
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Pizza' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
@@ -267,17 +291,25 @@
                 <small class="text-muted fst-italic">All Category of Main Course</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
                     <div class="d-sm-flex me-2">
-                        {% for item in items_main_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %} 
+                        {% for item in items_main_two %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_main_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_main_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_main_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='light' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %} 
+                        {% for item in items_main_four %}                                                        
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_main_url color='light' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_main_url color='light' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}
                     </div>                    
                 </div>                
-                <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
+                <a href="{% url 'store:specific-category' 'Main Course' %}" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
             </div>
         </div>      
     </div>
@@ -290,14 +322,22 @@
                 <small class="text-muted fst-italic">All Category of Sizzlers</small>
                 <div class="d-flex justify-content-evenly my-sm-5 my-3">
                     <div class="d-sm-flex me-2">
-                        {% for item in items_sizzlers_two %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %} 
+                        {% for item in items_sizzlers_two %}                    
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}  
                     </div>
                     <div class="d-sm-flex">
-                        {% for item in items_sizzlers_four %}
-                            {% include 'store/sections/home-row.html' with item_slug=item.product_detail_url color='black' image_url=item.image.url name=item.name price=item.price %}                            
-                        {% endfor %} 
+                        {% for item in items_sizzlers_two %}                    
+                            {% if request.user in item.customer.all %}                                          
+                                {% include 'store/sections/home-row.html' with in_cart=True item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                                            
+                            {% else %}
+                                {% include 'store/sections/home-row.html' with in_cart=False item_slug=item.detail_main_url color='black' image_url=item.image.url name=item.name price=item.price %}                                
+                            {% endif %}
+                        {% endfor %}  
                     </div>                    
                 </div>
                 <a href="" class="text-white text-decoration-none black-transition p-1 rounded">See more <i class="bi bi-grid"></i></a>
