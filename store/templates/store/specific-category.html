@@ -12,9 +12,9 @@
             <div class="d-flex pb-3 flex-wrap">     
                 {% for item in coffee_classics %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}                                                                                      
             </div>  
@@ -23,9 +23,9 @@
             <div class="d-flex pb-3 flex-wrap">                
                 {% for item in special_latte %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %} 
                 {% endfor %}  
             </div>  
@@ -34,9 +34,9 @@
         <div class="d-flex pb-3 flex-wrap">  
             {% for item in categorized_items %}
                 {% if request.user in item.customer.all %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                            
                 {% else %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_caffeinated_url image_url=item.image.url name=item.name price=item.price %}                                            
                 {% endif %}  
             {% endfor %}                                                  
         </div> 
@@ -46,9 +46,9 @@
             <div class="d-flex pb-3 flex-wrap">                            
                 {% for item in frappe %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %} 
                 {% endfor %}                                                                        
             </div>  
@@ -57,31 +57,31 @@
             <div class="d-flex pb-3 flex-wrap">                
                 {% for item in other_drinks %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}  
             </div> 
-        <!-- This div is only for the Other Drinks category. -->
+        <!-- This div is for the Other Drinks category. -->
         {% elif items_category == 'Other Drinks' %}   
         <div class="d-flex pb-3 flex-wrap">  
             {% for item in other_drinks %}
                 {% if request.user in item.customer.all %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                 {% else %}
-                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                 {% endif %}  
             {% endfor %}                                                  
         </div> 
-        <!-- This div is only for the Frappe category. -->
+        <!-- This div is for the Frappe category. -->
         {% elif items_category == 'Frappe' %}                                                                 
             <div class="d-flex pb-3 flex-wrap">  
                 {% for item in categorized_items %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_coolers_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}                                                  
             </div> 
@@ -90,12 +90,35 @@
             <div class="d-flex pb-3 flex-wrap">  
                 {% for item in categorized_items %}
                     {% if request.user in item.customer.all %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.hot_price %}                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_only_water_url image_url=item.image.url name=item.name price=item.price %}                            
                     {% else %}
-                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_only_water image_url=item.image.url name=item.name price=item.hot_price %}                                            
+                        {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_only_water_url image_url=item.image.url name=item.name price=item.price %}                                            
                     {% endif %}  
                 {% endfor %}                                                  
-            </div>        
-        {% endif %}
+            </div>    
+        <!-- This div is for the All About Wings category. -->
+        {% elif items_category == 'Pizza' %}                                                                 
+        <div class="d-flex pb-3 flex-wrap">  
+            {% for item in categorized_items %}
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_pizza_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_pizza_url image_url=item.image.url name=item.name price=item.price %}                                            
+                {% endif %}  
+            {% endfor %}    
+        <!-- This div is for the following categories: All About Wings, Main Course and Sizzlers. -->
+        {% elif items_category == 'All About Wings' or items_category == 'Main Course' or items_category == 'Sizzlers' %}                                                                 
+        <div class="d-flex pb-3 flex-wrap">  
+            {% for item in categorized_items %}
+                {% if request.user in item.customer.all %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=True item_slug=item.detail_main_url image_url=item.image.url name=item.name price=item.price %}                            
+                {% else %}
+                    {% include 'store/sections/all-product-div.html' with in_cart=False item_slug=item.detail_main_url image_url=item.image.url name=item.name price=item.price %}                                            
+                {% endif %}  
+            {% endfor %}    
+        {% else %}
+            <h2>Something went wrong...</h2>
+        {% endif %}                                              
+        </div> 
     </div>
 {% endblock content %}

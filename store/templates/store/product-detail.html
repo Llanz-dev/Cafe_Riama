@@ -17,7 +17,7 @@
                 {% if item.category == 'Special Latte' or item.category == 'Coffee Classics' %}                             
                   <h3>₱ <span id="product-price">{{ item.hot_price }}</span> (<span id="hot-cold">Hot</span>)</h3>                  
                 {% else %}
-                  <h3>₱ <span id="product-price">{{ item.hot_price }}</span></h3>                  
+                  <h3>₱ <span id="product-price">{{ item.price }}</span></h3>                  
                 {% endif %}
                 <hr class="my-5">
                 
@@ -42,34 +42,86 @@
                       <div class="form-check">                                    
                         {% render_field caffeinated_form.milk class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Milk - <span id="add-ons-two">{{ caffeinated_add.milk }}</span>
+                          Milk - <span id="add-ons-two">{{ add_on.milk }}</span>
                         </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.whip_cream class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Whip Cream - <span id="add-ons-two">{{ caffeinated_add.whip_cream }}</span>
+                          Whip Cream - <span id="add-ons-two">{{ add_on.whip_cream }}</span>
                         </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.syrup_pump class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Syrup Pump - <span id="add-ons-three">{{ caffeinated_add.syrup_pump }}</span>
+                          Syrup Pump - <span id="add-ons-three">{{ add_on.syrup_pump }}</span>
                         </label>
                       </div>
                       <div class="form-check">
                         {% render_field caffeinated_form.espresso_shot class='form-check-input' %}   
                         <label class="form-check-label" for="flexCheckChecked">
-                          Espresso Shot - <span id="add-ons-four">{{ caffeinated_add.espresso_shot }}</span>
+                          Espresso Shot - <span id="add-ons-four">{{ add_on.espresso_shot }}</span>
                         </label>
                       </div> 
-                {% elif item.category == 'Starters' or item.category == 'Silog Meals' or item.category == 'Burger with Fries' %} 
+                {% elif item.category == 'Starters' or item.category == 'Silog Meals' or item.category == 'Burger with Fries' or item.category == 'Pasta' %} 
                   <div class="form-check">
-                    {% render_field starters_form.bottled_water class='form-check-input' %}   
+                    {% render_field only_water_form.bottled_water class='form-check-input' %}   
                     <label class="form-check-label" for="flexCheckChecked">
-                      Bottled Water - <span id="add-ons-four">{{ others_add.bottled_water }}</span>
+                      Bottled Water - <span id="add-ons-four">{{ add_on.bottled_water }}</span>
                     </label>
-                  </div>                                     
+                  </div>   
+                {% elif item.category == 'Pizza' %}  
+                  <h6 class="mt-3">Add ons:</h6>
+                  <div class="form-check">                                    
+                    {% render_field pizza_form.bacon class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Bacon - <span id="add-ons-two">{{ add_on.bacon }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {% render_field pizza_form.pepperoni class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Pepperoni - <span id="add-ons-two">{{ add_on.pepperoni }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {% render_field pizza_form.ham class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Ham - <span id="add-ons-three">{{ add_on.ham }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {% render_field pizza_form.cheese class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Cheese - <span id="add-ons-four">{{ add_on.cheese }}</span>
+                    </label>
+                  </div>                                   
+                {% elif item.category == 'All About Wings' or item.category == 'Main Course' or item.category == 'Sizzlers' %}  
+                  <h6 class="mt-3">Add ons:</h6>
+                  <div class="form-check">                                    
+                    {% render_field main_form.plain_rice class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Plain rice - <span id="add-ons-two">{{ add_on.plain_rice }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {% render_field main_form.rice_platter class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Rice platter - <span id="add-ons-two">{{ add_on.rice_platter }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {% render_field main_form.aligue_platter class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Aligue platter - <span id="add-ons-three">{{ add_on.aligue_platter }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    {% render_field main_form.bottled_water class='form-check-input' %}   
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Bottled water - <span id="add-ons-four">{{ add_on.bottled_water }}</span>
+                    </label>
+                  </div>                                   
                 {% endif %}                                                   
                 <div class="mt-4">
                 <a href="{% url 'store:buy-now' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-primary">Buy Now</a>

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CaffeinatedAdd, OthersAdd, Item, OrderItem, Order, Delivery, Collection, Payment
+from .models import AddOn, Item, OrderItem, Order, Delivery, Collection, Payment
 
 class ItemAdmin(admin.ModelAdmin):
     prepopulated_fields = {
@@ -7,8 +7,7 @@ class ItemAdmin(admin.ModelAdmin):
     }
 
 # Register your models here.
-admin.site.register(OthersAdd)
-admin.site.register(CaffeinatedAdd)
+admin.site.register(AddOn)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(OrderItem)
 admin.site.register(Order)

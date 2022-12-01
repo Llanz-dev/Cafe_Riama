@@ -1,6 +1,6 @@
-from .models import CaffeinatedAdd, OthersAdd, Item, OrderItem, Order, Delivery, Collection, Payment
+from .models import AddOn, Item, OrderItem, Order, Delivery, Collection, Payment
 from account.models import Customer
-from .forms import CaffeinatedForm, OnlyWaterForm, DeliveryForm, CollectionForm
+from .forms import CaffeinatedForm, OnlyWaterForm, PizzaForm, MainForm, DeliveryForm, CollectionForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -77,11 +77,12 @@ def home(request):
 
     return render(request, 'store/home.html', context)
 
+# This kind of detail is only for the category of Caffeinated.
 def detail_caffeinated(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)                                        
     caffeinated_form = CaffeinatedForm()
-    caffeinated_add = CaffeinatedAdd.objects.all()
-    caffeinated_add = caffeinated_add.first()
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()
     
     if request.method == 'POST':
         if request.user.is_authenticated:            
@@ -94,7 +95,7 @@ def detail_caffeinated(request, item_slug):
                      
                 # This will set the price whether the customer wants Hot or Cold.
                 if caffeinated_form.cleaned_data['hot_or_cold'] == 'Hot':
-                    instance.price = item.hot_price
+                    instance.price = item.price
                 else:
                     instance.price = item.cold_price
                     
@@ -103,17 +104,17 @@ def detail_caffeinated(request, item_slug):
                 # This will check the checkbox if the customer would like to add an add-ons.
                 # Also to add the price and total it.
                 if caffeinated_form.cleaned_data['milk']:
-                    instance.total_price += caffeinated_add.milk
+                    instance.total_price += add_on.milk
                     instance.milk = True
                 if caffeinated_form.cleaned_data['whip_cream']:
-                    instance.total_price += caffeinated_add.whip_cream
+                    instance.total_price += add_on.whip_cream
                     instance.whip_cream = True
                 if caffeinated_form.cleaned_data['syrup_pump']:
-                    instance.total_price += caffeinated_add.syrup_pump
+                    instance.total_price += add_on.syrup_pump
                     instance.syrup_pump = True
                 if caffeinated_form.cleaned_data['espresso_shot']:
                     instance.espresso_shot = True     
-                    instance.total_price += caffeinated_add.espresso_shot
+                    instance.total_price += add_on.espresso_shot
                     
                 order_item = OrderItem.objects.filter(user=request.user, item=item, ordered=False, in_cart=True)                    
                 # If the item is already in the OrderItem table then it will just increase the quantity and the price.                        
@@ -150,9 +151,10 @@ def detail_caffeinated(request, item_slug):
         else:
             return redirect('account:sign-in')                                              
         
-    context = {'item': item, 'caffeinated_form': caffeinated_form, 'caffeinated_add': caffeinated_add, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
+# This kind of detail is only for the category of Coolers.
 def detail_coolers(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)  
     
@@ -174,7 +176,7 @@ def detail_coolers(request, item_slug):
             order, created = Order.objects.get_or_create(user=request.user, ordered=False)     
             order.items.add(order_item_create) 
             order_item_create.in_cart = True
-            order_item_create.total_price = item.hot_price
+            order_item_create.total_price = item.price
             item.customer.add(request.user)  
             item.save()              
             order_item_create.save()   
@@ -189,22 +191,22 @@ def detail_coolers(request, item_slug):
 # This kind of detail is only for those items that its add-ons is only bottled water.
 def detail_only_water(request, category, item_slug):
     item = Item.objects.get(category=category, item_slug=item_slug)  
-    starters_form = OnlyWaterForm()
-    others_add = OthersAdd.objects.all()
-    others_add = others_add.first()    
-
+    only_water_form = OnlyWaterForm()
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()   
+    
     if request.method == 'POST':        
         if request.user.is_authenticated:
-            starters_form = OnlyWaterForm(request.POST)
-            if starters_form.is_valid():
-                instance = starters_form.save(commit=False)
+            only_water_form = OnlyWaterForm(request.POST)
+            if only_water_form.is_valid():
+                instance = only_water_form.save(commit=False)
                 instance.user = request.user
                 instance.item = item
                 
                 # This will check the checkbox if the customer would like to add a bottled water.
                 # Also to add the price and total it.
-                if starters_form.cleaned_data['bottled_water']:
-                    instance.total_price += others_add.bottled_water
+                if only_water_form.cleaned_data['bottled_water']:
+                    instance.total_price += add_on.bottled_water
                     instance.bottled_water = True
                                     
                 order_item = OrderItem.objects.filter(user=request.user, item=item, ordered=False, in_cart=True)                    
@@ -231,8 +233,8 @@ def detail_only_water(request, category, item_slug):
 
                 # This will add the item to OrderItem table and input whatever the customer added.                
                 order, created = Order.objects.get_or_create(user=request.user, ordered=False)     
-                order.items.add(starters_form.save()) 
-                instance.price = item.hot_price
+                order.items.add(only_water_form.save()) 
+                instance.price = item.price
                 instance.total_price += instance.price
                 instance.in_cart = True                
                 item.customer.add(request.user)  
@@ -242,16 +244,152 @@ def detail_only_water(request, category, item_slug):
         else:
             return redirect('account:sign-in')
                                           
-    context = {'item': item, 'starters_form': starters_form, 'others_add': others_add, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
+
+# This kind of detail is only for the category of Pizza.
+def detail_pizza(request, item_slug):
+    item = Item.objects.get(item_slug=item_slug)  
+    pizza_form = PizzaForm()
+    add_on = AddOn.objects.all()
+    add_on = add_on.first() 
+
+    if request.method == 'POST':        
+        if request.user.is_authenticated:
+            pizza_form = PizzaForm(request.POST)
+            if pizza_form.is_valid():
+                instance = pizza_form.save(commit=False)
+                instance.user = request.user
+                instance.item = item
+                
+                # This will check the checkbox if the customer would like to add a bottled water.
+                # Also to add the price and total it.
+                if pizza_form.cleaned_data['bacon']:
+                    instance.total_price += add_on.bacon
+                    instance.bacon = True
+                if pizza_form.cleaned_data['pepperoni']:
+                    instance.total_price += add_on.pepperoni
+                    instance.pepperoni = True
+                if pizza_form.cleaned_data['ham']:
+                    instance.total_price += add_on.ham
+                    instance.ham = True
+                if pizza_form.cleaned_data['cheese']:
+                    instance.total_price += add_on.cheese
+                    instance.cheese = True
+                                    
+                order_item = OrderItem.objects.filter(user=request.user, item=item, ordered=False, in_cart=True)                    
+                # If the item is already in the OrderItem table then it will just increase the quantity and the price.                        
+                if order_item:                                            
+                    # If the the product has only 1 in OrderItem table.
+                    if order_item.count() == 1:
+                        order_item = order_item.last()
+                        # If the customer go back again on the specific product and the customer click again the "Add to Cart" button.
+                        # Then it will check first if the customer still wants to buy the same add-ons.
+                        # If the customer is, then it will just increment the quantity of this product.
+                        if instance.bacon == order_item.bacon and instance.pepperoni == order_item.pepperoni and instance.ham == order_item.ham and instance.cheese == order_item.cheese:
+                            order_item.quantity += 1
+                            order_item.save()
+                            return redirect('store:cart')  
+                        
+                    # If the the product has more than 1 in OrderItem table.             
+                    else:
+                        for data in order_item:
+                            if instance.bacon == data.bacon and instance.pepperoni == data.pepperoni and instance.ham == data.ham and instance.cheese == data.cheese:
+                                data.quantity += 1
+                                data.save()
+                                return redirect('store:cart')                                                                                                                                                                                                                                                                                             
+
+                # This will add the item to OrderItem table and input whatever the customer added.                
+                order, created = Order.objects.get_or_create(user=request.user, ordered=False)     
+                order.items.add(pizza_form.save()) 
+                instance.price = item.price
+                instance.total_price += instance.price
+                instance.in_cart = True                
+                item.customer.add(request.user)  
+                item.save()              
+                instance.save()   
+                return redirect('store:cart')                                                                                                                                                                                                                                                                                              
+        else:
+            return redirect('account:sign-in')
+    
+    context = {'item': item, 'pizza_form': pizza_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    return render(request, 'store/product-detail.html', context)
+
+# This kind of detail is for the following categories:.
+def detail_main(request, item_slug):
+    item = Item.objects.get(item_slug=item_slug)  
+    main_form = MainForm()
+    add_on = AddOn.objects.all()
+    add_on = add_on.first() 
+
+    if request.method == 'POST':        
+        if request.user.is_authenticated:
+            main_form = MainForm(request.POST)
+            if main_form.is_valid():
+                instance = main_form.save(commit=False)
+                instance.user = request.user
+                instance.item = item
+                
+                # This will check the checkbox if the customer would like to add an add-ons.
+                # Also to add the price and total it.
+                if main_form.cleaned_data['plain_rice']:
+                    instance.total_price += add_on.plain_rice
+                    instance.plain_rice = True
+                if main_form.cleaned_data['rice_platter']:
+                    instance.total_price += add_on.rice_platter
+                    instance.rice_platter = True
+                if main_form.cleaned_data['aligue_platter']:
+                    instance.total_price += add_on.aligue_platter
+                    instance.aligue_platter = True
+                if main_form.cleaned_data['bottled_water']:
+                    instance.total_price += add_on.bottled_water
+                    instance.bottled_water = True
+                                    
+                order_item = OrderItem.objects.filter(user=request.user, item=item, ordered=False, in_cart=True)                    
+                # If the item is already in the OrderItem table then it will just increase the quantity and the price.                        
+                if order_item:                                            
+                    # If the the product has only 1 in OrderItem table.
+                    if order_item.count() == 1:
+                        order_item = order_item.last()
+                        # If the customer go back again on the specific product and the customer click again the "Add to Cart" button.
+                        # Then it will check first if the customer still wants to buy the same add-ons.
+                        # If the customer is, then it will just increment the quantity of this product.
+                        if instance.plain_rice == order_item.plain_rice and instance.rice_platter == order_item.rice_platter and instance.aligue_platter == order_item.aligue_platter and instance.bottled_water == order_item.bottled_water:                            
+                            order_item.quantity += 1
+                            order_item.save()
+                            return redirect('store:cart')  
+                        
+                    # If the the product has more than 1 in OrderItem table.             
+                    else:
+                        for data in order_item:
+                            if instance.plain_rice == data.plain_rice and instance.rice_platter == data.rice_platter and instance.aligue_platter == data.aligue_platter and instance.bottled_water == data.bottled_water:
+                                data.quantity += 1
+                                data.save()
+                                return redirect('store:cart')                                                                                                                                                                                                                                                                                             
+
+                # This will add the item to OrderItem table and input whatever the customer added.                
+                order, created = Order.objects.get_or_create(user=request.user, ordered=False)     
+                order.items.add(main_form.save()) 
+                instance.price = item.price
+                instance.total_price += instance.price
+                instance.in_cart = True                
+                item.customer.add(request.user)  
+                item.save()              
+                instance.save()   
+                return redirect('store:cart')                                                                                                                                                                                                                                                                                              
+        else:
+            return redirect('account:sign-in')
+    
+    context = {'item': item, 'main_form': main_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    return render(request, 'store/product-detail.html', context) 
 
 @login_required
 def caffeinated_update(request, item_slug, order_item_id):
     item = Item.objects.get(item_slug=item_slug)
     order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)    
     caffeinated_form = CaffeinatedForm(instance=order_item)
-    caffeinated_add = CaffeinatedAdd.objects.all()
-    caffeinated_add = caffeinated_add.first()
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()
     
     if request.method == 'POST':
         caffeinated_form = CaffeinatedForm(request.POST, instance=order_item)
@@ -269,51 +407,142 @@ def caffeinated_update(request, item_slug, order_item_id):
             instance.total_price = 0
             # This update among add-ons.
             if caffeinated_form.cleaned_data['milk']:
-                instance.total_price += caffeinated_add.milk
+                instance.total_price += add_on.milk
                 instance.milk = True
             if caffeinated_form.cleaned_data['whip_cream']:
-                instance.total_price += caffeinated_add.whip_cream
+                instance.total_price += add_on.whip_cream
                 instance.whip_cream = True
             if caffeinated_form.cleaned_data['syrup_pump']:
-                instance.total_price += caffeinated_add.syrup_pump
+                instance.total_price += add_on.syrup_pump
                 instance.syrup_pump = True
             if caffeinated_form.cleaned_data['espresso_shot']:
                 instance.espresso_shot = True     
-                instance.total_price += caffeinated_add.espresso_shot
+                instance.total_price += add_on.espresso_shot
+                
             instance.total_price += instance.price                    
             instance.save()                                                                
         return redirect('store:cart')
     
-    context = {'item':item, 'order_item': order_item, 'caffeinated_form': caffeinated_form, 'caffeinated_add': caffeinated_add, 'order_quantity': order_quantity(request)}
+    context = {'item':item, 'order_item': order_item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-update.html', context)
 
 @login_required
 def only_water_update(request, category, item_slug, order_item_id):
     item = Item.objects.get(category=category, item_slug=item_slug)
     order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)    
-    starters_form = OnlyWaterForm(instance=order_item)
-    others_add = OthersAdd.objects.all()
-    others_add = others_add.first()
+    only_water_form = OnlyWaterForm(instance=order_item)
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()
 
     if request.method == 'POST':
-        starters_form = OnlyWaterForm(request.POST, instance=order_item)
-        if starters_form.is_valid():
-            instance = starters_form.save(commit=False)   
+        only_water_form = OnlyWaterForm(request.POST, instance=order_item)
+        if only_water_form.is_valid():
+            instance = only_water_form.save(commit=False)   
 
             instance.total_price = 0         
                
-            instance.price = item.hot_price            
-            # This will check the checkbox if the customer would like to add a bottled water.
+            instance.price = item.price            
+            # This will check the checkbox if the customer would like to add a bottled water or to remove it.
             # Also to add the price and total it.
-            if starters_form.cleaned_data['bottled_water']:
-                instance.total_price += others_add.bottled_water
-                instance.bottled_water = True     
+            if only_water_form.cleaned_data['bottled_water']:
+                instance.total_price += add_on.bottled_water
+                instance.bottled_water = True    
+                 
             instance.total_price += instance.price                    
             instance.save()     
             return redirect('store:cart')
         
-    context = {'item':item, 'order_item': order_item, 'starters_form': starters_form, 'others_add': others_add, 'order_quantity': order_quantity(request)}
+    context = {'item':item, 'order_item': order_item, 'only_water_form': only_water_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-update.html', context)
+
+@login_required
+def pizza_update(request, item_slug, order_item_id):
+    item = Item.objects.get(item_slug=item_slug)
+    order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)    
+    pizza_form = PizzaForm(instance=order_item)
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()
+
+    if request.method == 'POST':
+        caffeinated_form = PizzaForm(request.POST, instance=order_item)
+        if caffeinated_form.is_valid():
+            instance = caffeinated_form.save(commit=False)
+                  
+            instance.price = item.price
+                                 
+            instance.total_price = 0
+            # This update among add-ons.
+            if caffeinated_form.cleaned_data['bacon']:
+                instance.total_price += add_on.bacon
+                instance.bacon = True
+            if caffeinated_form.cleaned_data['pepperoni']:
+                instance.total_price += add_on.pepperoni
+                instance.pepperoni = True
+            if caffeinated_form.cleaned_data['ham']:
+                instance.total_price += add_on.ham
+                instance.ham = True
+            if caffeinated_form.cleaned_data['cheese']:
+                instance.cheese = True     
+                instance.total_price += add_on.cheese
+                
+            instance.total_price += instance.price                    
+            instance.save()                                                                
+        return redirect('store:cart')
+
+    context = {'item':item, 'order_item': order_item, 'pizza_form': pizza_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    return render(request, 'store/product-update.html', context)   
+
+@login_required
+def main_update(request, item_slug, order_item_id):
+    item = Item.objects.get(item_slug=item_slug)
+    order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)    
+    main_form = MainForm(instance=order_item)
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()
+
+    if request.method == 'POST':
+        main_form = MainForm(request.POST, instance=order_item)
+        if main_form.is_valid():
+            instance = main_form.save(commit=False)
+                  
+            instance.price = item.price
+                                 
+            instance.total_price = 0
+            # This update among add-ons.
+            # if main_form.cleaned_data['plain_rice']:
+            #     instance.total_price += add_on.plain_rice
+            #     instance.plain_rice = True
+            # if main_form.cleaned_data['rice_platter']:
+            #     instance.total_price += add_on.rice_platter
+            #     instance.rice_platter = True
+            # if main_form.cleaned_data['aligue_platter']:
+            #     instance.total_price += add_on.aligue_platter
+            #     instance.aligue_platter = True
+            # if main_form.cleaned_data['bottled_water']:
+            #     instance.bottled_water = True     
+            #     instance.total_price += add_on.bottled_water
+            update_add_ons(request, instance, add_on, main_form, 'plain_rice', 'rice_platter', 'aligue_platter', 'bottled_water')            
+            
+
+    context = {'item':item, 'order_item': order_item, 'main_form': main_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    return render(request, 'store/product-update.html', context)   
+
+def update_add_ons(request, instance, add_on, item_form, item_one, item_two, item_three, item_four):
+    if item_form.cleaned_data[item_one]:
+        instance.total_price += add_on.item_one
+        instance.item_one = True
+    if item_form.cleaned_data[item_two]:
+        instance.total_price += add_on.item_two
+        instance.item_two = True
+    if item_form.cleaned_data[item_three]:
+        instance.total_price += add_on.item_three
+        instance.item_three = True
+    if item_form.cleaned_data[item_four]:
+        instance.item_four = True     
+        instance.total_price += add_on.item_four   
+    instance.total_price += instance.price                    
+    instance.save()                                                                
+    return redirect('store:cart') 
 
 def all_product(request):
     coffee_classics = Item.objects.filter(category='Coffee Classics')
@@ -574,10 +803,8 @@ def thank_you(request):
 # This where your pending orders show.
 @login_required
 def pending_orders(request):
-    caffeinated_add = CaffeinatedAdd.objects.all()
-    caffeinated_add = caffeinated_add.first()
-    others_add = OthersAdd.objects.all()
-    others_add = others_add.first()
+    add_on = AddOn.objects.all()
+    add_on = add_on.first()    
     # This will get all what you ordered and display the information that you input.
     all_order = Order.objects.filter(user=request.user, ordered=True)  
         
@@ -601,5 +828,5 @@ def pending_orders(request):
         context = {'customer_exists': all_order.exists(), 'order_quantity': order_quantity(request)}   
         return render(request, 'store/delivery.html', context)              
     
-    context = {'all_order': all_order, 'payment': payment, 'caffeinated_add': caffeinated_add, 'others_add': others_add, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
+    context = {'all_order': all_order, 'payment': payment, 'add_on': add_on, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
     return render(request, 'store/pending-orders.html', context)

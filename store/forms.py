@@ -4,6 +4,7 @@ from django import forms
 CHOICES=(('Hot', 'Hot'),
          ('Cold', 'Cold'))
 
+# This form is only for the category of Caffeinated.
 class CaffeinatedForm(forms.ModelForm):
     hot_or_cold = forms.ChoiceField(label='', choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-control'}))
 
@@ -15,7 +16,8 @@ class CaffeinatedForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = ['hot_or_cold', 'milk', 'whip_cream', 'syrup_pump', 'espresso_shot']
-        
+
+# This form is only for the category of Coolers.
 class CoolersForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -25,7 +27,8 @@ class CoolersForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = []
-        
+
+# This form is only for the the following categories: Starters, Silog Meals, Burger with Fries and Pasta.
 class OnlyWaterForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -35,6 +38,28 @@ class OnlyWaterForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = ['bottled_water']
+
+# This form is only for the category of Pizza.
+class PizzaForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PizzaForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'bg-light'
+    class Meta:
+        model = OrderItem
+        fields = ['bacon', 'pepperoni', 'ham', 'cheese']   
+        
+# This form is for the following of categories: All About Wings, Main Course and Sizzlers.
+class MainForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(MainForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'bg-light'
+    class Meta:
+        model = OrderItem
+        fields = ['plain_rice', 'rice_platter', 'aligue_platter', 'bottled_water']   
 
 class DeliveryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
