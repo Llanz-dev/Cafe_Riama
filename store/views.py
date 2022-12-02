@@ -509,40 +509,26 @@ def main_update(request, item_slug, order_item_id):
                                  
             instance.total_price = 0
             # This update among add-ons.
-            # if main_form.cleaned_data['plain_rice']:
-            #     instance.total_price += add_on.plain_rice
-            #     instance.plain_rice = True
-            # if main_form.cleaned_data['rice_platter']:
-            #     instance.total_price += add_on.rice_platter
-            #     instance.rice_platter = True
-            # if main_form.cleaned_data['aligue_platter']:
-            #     instance.total_price += add_on.aligue_platter
-            #     instance.aligue_platter = True
-            # if main_form.cleaned_data['bottled_water']:
-            #     instance.bottled_water = True     
-            #     instance.total_price += add_on.bottled_water
-            update_add_ons(request, instance, add_on, main_form, 'plain_rice', 'rice_platter', 'aligue_platter', 'bottled_water')            
+            if main_form.cleaned_data['plain_rice']:
+                instance.total_price += add_on.plain_rice
+                instance.plain_rice = True
+            if main_form.cleaned_data['rice_platter']:
+                instance.total_price += add_on.rice_platter
+                instance.rice_platter = True
+            if main_form.cleaned_data['aligue_platter']:
+                instance.total_price += add_on.aligue_platter
+                instance.aligue_platter = True
+            if main_form.cleaned_data['bottled_water']:
+                instance.bottled_water = True     
+                instance.total_price += add_on.bottled_water
+                
+            instance.total_price += instance.price                    
+            instance.save()                                                                
+            return redirect('store:cart') 
             
 
     context = {'item':item, 'order_item': order_item, 'main_form': main_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-update.html', context)   
-
-def update_add_ons(request, instance, add_on, item_form, item_one, item_two, item_three, item_four):
-    if item_form.cleaned_data[item_one]:
-        instance.total_price += add_on.item_one
-        instance.item_one = True
-    if item_form.cleaned_data[item_two]:
-        instance.total_price += add_on.item_two
-        instance.item_two = True
-    if item_form.cleaned_data[item_three]:
-        instance.total_price += add_on.item_three
-        instance.item_three = True
-    if item_form.cleaned_data[item_four]:
-        instance.item_four = True     
-        instance.total_price += add_on.item_four   
-    instance.total_price += instance.price                    
-    instance.save()                                                                
-    return redirect('store:cart') 
 
 def all_product(request):
     coffee_classics = Item.objects.filter(category='Coffee Classics')
