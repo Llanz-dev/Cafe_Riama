@@ -688,17 +688,13 @@ def remove_product(request, item_slug, order_item_id):
 @login_required
 def delivery(request):
     payment = Payment.objects.all()
-    delivery_fee = payment.first().delivery_fee
     delivery_form = DeliveryForm()
     order = Order.objects.filter(user=request.user, ordered=False) 
     order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True) 
     
+    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.    
     maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee
-    subtotal = sub_total(request)    
-    print('Subtotal:', subtotal)
-    print('Maximum delivery fee:', maximum_delivery_fee)
-    
-    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.
+    subtotal = sub_total(request)          
     if subtotal < maximum_delivery_fee:
         messages.error(request, f'Please add your order to make it ' + str(maximum_delivery_fee) + ' amount to proceed to delivery.')              
         messages.error(request, f'You could also click the collection instead.')              
@@ -713,7 +709,9 @@ def delivery(request):
     customer_order = order.first() 
     customer_items = order_items.all() 
     
-    all_order = customer_order.items.all().order_by('-id') 
+    all_order = customer_order.items.all().order_by('-id')
+    arevalo_delivery_fee = DeliveryFee.objects.all().first().arevalo
+    delivery_fee = arevalo_delivery_fee 
     total = delivery_fee + sub_total(request)
 
     if request.method == 'POST':
@@ -721,6 +719,25 @@ def delivery(request):
         office_home = request.POST.get('home-office') 
         if delivery_form.is_valid():
             instance = delivery_form.save(commit=False)
+            # Setting of delivery fee according to the district location.
+            district_location = delivery_form.cleaned_data['districts']
+            delivery_fee_amount = DeliveryFee.objects.all().first()
+            if district_location == 'Arevalo':
+                delivery_fee = delivery_fee_amount.arevalo     
+            if district_location == 'City Proper':
+                delivery_fee = delivery_fee_amount.city_proper
+            if district_location == 'Jaro':
+                delivery_fee = delivery_fee_amount.jaro
+            if district_location == 'La Paz':
+                delivery_fee = delivery_fee_amount.la_paz
+            if district_location == 'Lapuz':
+                delivery_fee = delivery_fee_amount.lapuz
+            if district_location == 'Mandurriao':
+                delivery_fee = delivery_fee_amount.mandurriao
+            if district_location == 'Molo':
+                delivery_fee = delivery_fee_amount.molo
+            print('The fee is,', delivery_fee)
+            print('The district is,', district_location)
             # This set of the customer.
             instance.user = request.user            
             instance.label = office_home
@@ -736,6 +753,7 @@ def delivery(request):
                 # Remove all the product that customer ordered after placing order.
                 for product in Item.objects.filter(customer=request.user):
                     product.customer.remove(request.user)
+                total = delivery_fee + sub_total(request)                                    
                 customer_order.save()
                 instance.save()
                 Payment.objects.create(user=request.user, delivery=delivery_form.instance, order=customer_order, subtotal=subtotal, delivery_fee=delivery_fee, total=total)  
