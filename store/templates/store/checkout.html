@@ -12,6 +12,15 @@
     <div class="container-lg my-5">        
         {% if customer_exists %}                        
         <div class="row justify-content-between">
+            {% if messages %}
+                {% for message in messages %}        
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}                        
+                        <div class="alert alert-danger">
+                          {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             <!-- Questions -->
             <form class="col-md-8 order-1" method="POST">
                 {% csrf_token %}

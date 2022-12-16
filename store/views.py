@@ -1,4 +1,4 @@
-from .models import AddOn, Item, OrderItem, Order, Delivery, Collection, Payment
+from .models import AddOn, Item, OrderItem, Order, DeliveryFee, Payment
 from account.models import Customer
 from .forms import CaffeinatedForm, OnlyWaterForm, PizzaForm, MainForm, DeliveryForm, CollectionForm
 from django.shortcuts import get_object_or_404, redirect, render
@@ -588,9 +588,7 @@ def specific_category(request, item_category):
     return render(request, 'store/specific-category.html', context)    
 
 @login_required
-def buy_now(request, item_slug):
-    print('You clicked buy now!')
-        
+def buy_now(request, item_slug):        
     return redirect('store:home', item_slug=item_slug)
 
 @login_required
@@ -610,6 +608,21 @@ def cart(request):
         context = {'customer_exists': order.exists()}
         
     return render(request, 'store/cart.html', context)
+
+@login_required
+def checkout(request):
+    order = Order.objects.filter(user=request.user, ordered=False)         
+       
+    # If the customer has no order yet.
+    if not order.exists():
+        context = {'customer_exists': order.exists()}   
+        return render(request, 'store/delivery.html', context)   
+
+    # All the customer order will display on right side navigation.
+    all_order = order.first().items.all().order_by('-id') 
+    
+    context = {'customer_exists': order.exists(), 'order_quantity': order_quantity(request), 'all_order': all_order}
+    return render(request, 'store/checkout.html', context)
 
 @login_required
 def decrease_quantity(request, item_slug, order_item_id): 
@@ -679,7 +692,18 @@ def delivery(request):
     delivery_form = DeliveryForm()
     order = Order.objects.filter(user=request.user, ordered=False) 
     order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True) 
-
+    
+    maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee
+    subtotal = sub_total(request)    
+    print('Subtotal:', subtotal)
+    print('Maximum delivery fee:', maximum_delivery_fee)
+    
+    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.
+    if subtotal < maximum_delivery_fee:
+        messages.error(request, f'Please add your order to make it ' + str(maximum_delivery_fee) + ' amount to proceed to delivery.')              
+        messages.error(request, f'You could also click the collection instead.')              
+        return redirect('store:checkout')
+    
     # If the customer has no order yet.
     if not order.exists():
         context = {'customer_exists': order.exists()}   
@@ -691,7 +715,6 @@ def delivery(request):
     
     all_order = customer_order.items.all().order_by('-id') 
     total = delivery_fee + sub_total(request)
-    subtotal = sub_total(request)
 
     if request.method == 'POST':
         delivery_form = DeliveryForm(request.POST)       
@@ -765,21 +788,6 @@ def collection(request):
 
     context = {'customer_exists': order.exists(), 'collection_form': collection_form, 'all_order': all_order, 'total': sub_total(request), 'order_quantity': order_quantity(request)}
     return render(request, 'store/collection.html', context)
-
-@login_required
-def checkout(request):
-    order = Order.objects.filter(user=request.user, ordered=False) 
-       
-    # If the customer has no order yet.
-    if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)   
-
-    # All the customer order will display on right side navigation.
-    all_order = order.first().items.all().order_by('-id') 
-    
-    context = {'customer_exists': order.exists(), 'order_quantity': order_quantity(request), 'all_order': all_order}
-    return render(request, 'store/checkout.html', context)
 
 # After you place your order.
 @login_required

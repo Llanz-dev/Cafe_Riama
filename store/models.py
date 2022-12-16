@@ -147,7 +147,7 @@ DISTRICT_CHOICES = (
 )
 
 class Delivery(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)    
     order = models.OneToOneField(Order, on_delete=models.CASCADE, blank=True, null=True)
     fullname = models.CharField(max_length=80)
     location = models.CharField(max_length=90)
@@ -184,8 +184,8 @@ class Collection(models.Model):
             # Continue the model saving
             super(Collection, self).save(*args, **kwargs) 
 
-
 class DeliveryFee(models.Model):
+    maximum_delivery_fee = models.PositiveIntegerField(default=300)
     arevalo = models.PositiveSmallIntegerField(default=70)
     city_proper = models.PositiveSmallIntegerField(default=60)
     jaro = models.PositiveSmallIntegerField(default=50)
