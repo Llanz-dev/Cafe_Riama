@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AddOn, Item, OrderItem, Order, Delivery, Collection, Payment
+from .models import AddOn, Item, OrderItem, Order, Delivery, Collection, DeliveryFee, Payment
 
 class ItemAdmin(admin.ModelAdmin):
     prepopulated_fields = {
@@ -13,4 +13,5 @@ admin.site.register(OrderItem)
 admin.site.register(Order)
 admin.site.register(Delivery)
 admin.site.register(Collection)
+admin.site.register(DeliveryFee)
 admin.site.register(Payment)
