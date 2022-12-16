@@ -190,7 +190,7 @@ class DeliveryFee(models.Model):
     city_proper = models.PositiveSmallIntegerField(default=60)
     jaro = models.PositiveSmallIntegerField(default=50)
     la_paz = models.PositiveSmallIntegerField(default=60)
-    lapuz = models.PositiveSmallIntegerField(default=70)
+    lapuz = models.PositiveSmallIntegerField(default=80)
     mandurriao = models.PositiveSmallIntegerField(default=40)
     molo = models.PositiveSmallIntegerField(default=70)
 
