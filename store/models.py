@@ -39,6 +39,9 @@ class AddOn(models.Model):
     rice_platter = models.PositiveSmallIntegerField(default=100, blank=True, null=True)
     aligue_platter = models.PositiveSmallIntegerField(default=120, blank=True, null=True)
     bottled_water = models.PositiveSmallIntegerField(default=20, blank=True, null=True)
+
+    def __str__(self):
+        return 'Add ons'
     
 # Create your models here.
 class Item(models.Model):
@@ -134,8 +137,9 @@ class Order(models.Model):
         return f'{self.user.username} - {self.items.count()}'
 
 DISTRICT_CHOICES = (
+    ('Arevalo', 'Arevalo'),    
     ('City Proper', 'City Proper'),
-    ('Arevalo', 'Arevalo'),
+    ('Jaro', 'Jaro'),
     ('La Paz', 'La Paz'),
     ('Lapuz', 'Lapuz'),
     ('Mandurriao', 'Mandurriao'),
@@ -143,12 +147,12 @@ DISTRICT_CHOICES = (
 )
 
 class Delivery(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)    
     order = models.OneToOneField(Order, on_delete=models.CASCADE, blank=True, null=True)
     fullname = models.CharField(max_length=80)
     location = models.CharField(max_length=90)
     mobile_number = models.CharField(max_length=11)
-    districts = models.CharField(choices=DISTRICT_CHOICES, max_length=11, default='City Proper')
+    districts = models.CharField(choices=DISTRICT_CHOICES, max_length=11, default='Arevalo')
     label = models.CharField(max_length=20, blank=True, null=True)
     other_notes = models.TextField(max_length=100, blank=True, null=True)
 
@@ -179,6 +183,18 @@ class Collection(models.Model):
                  self.mobile_number[:4], self.mobile_number[4:7], self.mobile_number[7:])
             # Continue the model saving
             super(Collection, self).save(*args, **kwargs) 
+
+class DeliveryFee(models.Model):
+    maximum_delivery_fee = models.PositiveIntegerField(default=300)
+    arevalo = models.PositiveSmallIntegerField(default=70)
+    city_proper = models.PositiveSmallIntegerField(default=60)
+    jaro = models.PositiveSmallIntegerField(default=50)
+    la_paz = models.PositiveSmallIntegerField(default=60)
+    mandurriao = models.PositiveSmallIntegerField(default=40)
+    molo = models.PositiveSmallIntegerField(default=70)
+
+    def __str__(self):
+        return 'Delivery fee'
 
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

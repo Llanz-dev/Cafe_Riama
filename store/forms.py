@@ -70,6 +70,7 @@ class DeliveryForm(forms.ModelForm):
     class Meta:
         model = Delivery
         fields = '__all__'
+        exclude = ['maximum_delivery_fee']
         widgets = {
           'other_notes': forms.Textarea(attrs={'rows':4, 'cols':15}),
         }
