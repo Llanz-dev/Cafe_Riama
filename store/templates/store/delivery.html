@@ -103,9 +103,9 @@
                     </div>
                 </div>   
                 <div id="payment">   
-                    <h5 class="">Subtotal ({{ order_quantity }} items): <span class="fw-bold">₱ {{ sub_total|intcomma }}</span></h5>
-                    <h5 class="delivery-total">Delivery fee: <span class="fw-bold">₱ {{ delivery_fee }}</span></h5>
-                    <h5>Total: <span class="fw-bold">₱ {{ total|intcomma }}</span></h5>
+                    <h5>Subtotal ({{ order_quantity }} items): ₱ <span class="fw-bold" id="sub_total">{{ sub_total|intcomma }}</span></h5>
+                    <h5 class="delivery-total">Delivery fee: ₱ <span class="fw-bold" id="delivery_fee">{{ delivery_fee|intcomma }}</span></h5>
+                    <h5>Total: ₱ <span class="fw-bold" id="total">{{ total|intcomma }}</span></h5>
                     <button type="submit" class="btn btn-primary mt-2" id="yes" value="place-order">Place Order</button>               
                 </div>
                 <hr class="my-5">

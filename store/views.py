@@ -603,7 +603,7 @@ def cart(request):
         if order_count == 0:
             Order.objects.get(user=request.user, ordered=False).delete()
             
-        context = {'customer_exists': order.exists(), 'all_order': all_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count}
+        context = {'all_order': all_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count, 'customer_exists': order.exists()}
     else:        
         context = {'customer_exists': order.exists()}
         
@@ -621,7 +621,7 @@ def checkout(request):
     # All the customer order will display on right side navigation.
     all_order = order.first().items.all().order_by('-id') 
     
-    context = {'customer_exists': order.exists(), 'order_quantity': order_quantity(request), 'all_order': all_order}
+    context = {'order_quantity': order_quantity(request), 'all_order': all_order, 'customer_exists': order.exists()}
     return render(request, 'store/checkout.html', context)
 
 @login_required
@@ -687,18 +687,15 @@ def remove_product(request, item_slug, order_item_id):
 
 @login_required
 def delivery(request):
-    payment = Payment.objects.all()
-    delivery_form = DeliveryForm()
-    order = Order.objects.filter(user=request.user, ordered=False) 
-    order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True) 
-    
     # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.    
     maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee
     subtotal = sub_total(request)          
     if subtotal < maximum_delivery_fee:
-        messages.error(request, f'Please add your order to make it ' + str(maximum_delivery_fee) + ' amount to proceed to delivery.')              
-        messages.error(request, f'You could also click the collection instead.')              
+        messages.error(request, f'Please add your order to make it ' + str(maximum_delivery_fee) + ' amount to proceed to delivery. You could also click the collection instead.')              
         return redirect('store:checkout')
+
+    order = Order.objects.filter(user=request.user, ordered=False) 
+    order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True) 
     
     # If the customer has no order yet.
     if not order.exists():
@@ -710,10 +707,13 @@ def delivery(request):
     customer_items = order_items.all() 
     
     all_order = customer_order.items.all().order_by('-id')
-    arevalo_delivery_fee = DeliveryFee.objects.all().first().arevalo
-    delivery_fee = arevalo_delivery_fee 
+    
+    # About of the total expense.
+    districts_delivery_fee = DeliveryFee.objects.all().first()
+    delivery_fee = districts_delivery_fee.arevalo 
     total = delivery_fee + sub_total(request)
-
+    
+    delivery_form = DeliveryForm()
     if request.method == 'POST':
         delivery_form = DeliveryForm(request.POST)       
         office_home = request.POST.get('home-office') 
@@ -735,9 +735,7 @@ def delivery(request):
             if district_location == 'Mandurriao':
                 delivery_fee = delivery_fee_amount.mandurriao
             if district_location == 'Molo':
-                delivery_fee = delivery_fee_amount.molo
-            print('The fee is,', delivery_fee)
-            print('The district is,', district_location)
+                delivery_fee = delivery_fee_amount.molo       
             # This set of the customer.
             instance.user = request.user            
             instance.label = office_home
@@ -761,7 +759,7 @@ def delivery(request):
             else:
                 messages.error(request, 'Please select a label between label or home')      
 
-    context = {'customer_exists': order.exists(), 'delivery_form': delivery_form, 'delivery_fee': delivery_fee, 'all_order': all_order, 'sub_total': sub_total(request), 'total': total, 'order_quantity': order_quantity(request)}
+    context = {'delivery_form': delivery_form, 'delivery_fee': delivery_fee, 'all_order': all_order, 'sub_total': sub_total(request), 'total': total, 'order_quantity': order_quantity(request), 'customer_exists': order.exists()}
     return render(request, 'store/delivery.html', context)
 
 @login_required
@@ -804,7 +802,7 @@ def collection(request):
             Payment.objects.create(user=request.user, collection=collection_form.instance, order=customer_order, subtotal=total, total=total)              
             return redirect('store:thank-you')             
 
-    context = {'customer_exists': order.exists(), 'collection_form': collection_form, 'all_order': all_order, 'total': sub_total(request), 'order_quantity': order_quantity(request)}
+    context = {'collection_form': collection_form, 'all_order': all_order, 'total': sub_total(request), 'order_quantity': order_quantity(request), 'customer_exists': order.exists()}
     return render(request, 'store/collection.html', context)
 
 # After you place your order.
