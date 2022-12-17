@@ -111,7 +111,17 @@
                 <hr class="my-5">
             </form>  
             <!-- Order Summary -->
-            {% include 'store/sections/order-scroll.html' %}
+            {% include 'store/sections/order-scroll.html' %}         
+        </div>
+        <!-- Get the delivery amount fee from Django to JavaScript. -->
+        <div class="d-none">
+            <span id="arevalo">{{ districts_delivery_fee.arevalo }}</span>
+            <span id="city_proper">{{ districts_delivery_fee.city_proper }}</span>
+            <span id="jaro">{{ districts_delivery_fee.jaro }}</span>
+            <span id="la_paz">{{ districts_delivery_fee.la_paz }}</span>
+            <span id="lapuz">{{ districts_delivery_fee.lapuz }}</span>
+            <span id="mandurriao">{{ districts_delivery_fee.mandurriao }}</span>
+            <span id="molo">{{ districts_delivery_fee.molo }}</span>
         </div>
     {% else %}
         {% include 'store/sections/order-first.html' %}
