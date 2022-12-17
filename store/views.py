@@ -759,7 +759,7 @@ def delivery(request):
             else:
                 messages.error(request, 'Please select a label between label or home')      
 
-    context = {'delivery_form': delivery_form, 'delivery_fee': delivery_fee, 'all_order': all_order, 'sub_total': sub_total(request), 'total': total, 'order_quantity': order_quantity(request), 'customer_exists': order.exists()}
+    context = {'delivery_form': delivery_form, 'delivery_fee': delivery_fee, 'districts_delivery_fee': districts_delivery_fee, 'all_order': all_order, 'sub_total': sub_total(request), 'total': total, 'order_quantity': order_quantity(request), 'customer_exists': order.exists()}
     return render(request, 'store/delivery.html', context)
 
 @login_required
