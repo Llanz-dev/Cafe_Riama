@@ -432,7 +432,8 @@ def caffeinated_update(request, item_slug, order_item_id):
                             order_item_add.quantity += order_item_delete.quantity
                             order_item_add.save()
                             order_item_delete.delete()                            
-                            return redirect('store:cart')                     
+                            return redirect('store:cart')    
+                                         
                         order_item_delete.quantity += order_item_add.quantity
                         order_item_delete.save()     
                         order_item_add.delete()                                                                                      
