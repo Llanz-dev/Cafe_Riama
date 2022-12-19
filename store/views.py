@@ -832,7 +832,7 @@ def pending_orders(request):
     add_on = AddOn.objects.all()
     add_on = add_on.first()    
     # This will get all what you ordered and display the information that you input.
-    all_order = Order.objects.filter(user=request.user, ordered=True)  
+    all_order = Order.objects.filter(user=request.user, ordered=True).order_by('-id')    
         
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
     # The admin has only the access to make the finish_transaction field turns into True.
@@ -851,7 +851,7 @@ def pending_orders(request):
 
     # If the customer has no order yet.
     if not all_order.exists():
-        context = {'customer_exists': all_order.exists(), 'order_quantity': order_quantity(request)}   
+        context = {'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}   
         return render(request, 'store/delivery.html', context)              
     
     context = {'all_order': all_order, 'payment': payment, 'add_on': add_on, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
