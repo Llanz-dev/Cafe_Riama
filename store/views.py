@@ -1,6 +1,5 @@
-from .models import AddOn, Item, OrderItem, Order, DeliveryFee, Payment
-from account.models import Customer
 from .forms import CaffeinatedForm, OnlyWaterForm, PizzaForm, MainForm, DeliveryForm, CollectionForm
+from .models import AddOn, Item, OrderItem, Order, DeliveryFee, Payment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -419,8 +418,25 @@ def caffeinated_update(request, item_slug, order_item_id):
                 instance.espresso_shot = True     
                 instance.total_price += add_on.espresso_shot
                 
+            # If the item is already in the OrderItem table then it will just increase the quantity and the price.                                                            
             instance.total_price += instance.price                    
-            instance.save()                                                                
+            instance.save() 
+            order_item = OrderItem.objects.filter(user=request.user, item=item, hot_cold=instance.hot_cold, milk=instance.milk, whip_cream=instance.whip_cream, syrup_pump=instance.syrup_pump, espresso_shot=instance.espresso_shot, ordered=False, in_cart=True)                                       
+            if order_item.count() > 1:
+                for data in order_item:                   
+                    if data.id != order_item_id:
+                        order_item_delete = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
+                        order_item_add = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
+                        # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
+                        if order_item_add.quantity > order_item_delete.quantity:
+                            order_item_add.quantity += order_item_delete.quantity
+                            order_item_add.save()
+                            order_item_delete.delete()                            
+                            return redirect('store:cart')                     
+                        order_item_delete.quantity += order_item_add.quantity
+                        order_item_delete.save()     
+                        order_item_add.delete()                                                                                      
+                        
         return redirect('store:cart')
     
     context = {'item':item, 'order_item': order_item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
@@ -670,14 +686,14 @@ def increase_quantity(request, item_slug, order_item_id):
 @login_required
 def remove_product(request, item_slug, order_item_id):
     item = get_object_or_404(Item, item_slug=item_slug)        
-    order_item = OrderItem.objects.get(user=request.user, id=order_item_id, item=item, ordered=False)    
+    order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False)    
     order_item_count = OrderItem.objects.filter(user=request.user, item=item, ordered=False).count()    
 
     # When the order item quantity is zero then delete in order item table.
     # If the customer has only 1 the same product left then delete the Item object in OrderItem Table and remove also the customer to that product. 
     if order_item_count == 1:
         item.customer.remove(request.user)                       
-        OrderItem.objects.get(user=request.user, id=order_item_id, item=item, ordered=False).delete()
+        OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False).delete()
         
     # If not, then remove only the Item in OrderItem table.        
     if order_item_count > 1:
