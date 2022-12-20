@@ -31,6 +31,9 @@ def sub_total(request):
         return 0
 
 def home(request):    
+    # This function will delete the OrderItem and Delivery or Collection table.
+    delete_transactions(request)
+    
     items_caffeinated_two = Item.objects.filter(category='Coffee Classics')[:2]
     items_caffeinated_four = Item.objects.filter(category='Coffee Classics')[2:4]
     items_frappe_two = Item.objects.filter(category='Frappe')[:2]
@@ -74,8 +77,8 @@ def home(request):
         'order_quantity': order_quantity(request)
         }    
 
-    return render(request, 'store/home.html', context)
-
+    return render(request, 'store/home.html', context)     
+      
 # This kind of detail is only for the category of Caffeinated.
 def detail_caffeinated(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)                                        
@@ -158,8 +161,7 @@ def detail_coolers(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)  
     
     if request.method == 'POST':        
-        if request.user.is_authenticated:
-            
+        if request.user.is_authenticated:            
             order_item_filter = OrderItem.objects.filter(user=request.user, item=item, ordered=False, in_cart=True)
             
             # If the item is already in the OrderItem table then it will just increase the quantity and the price.
@@ -178,8 +180,7 @@ def detail_coolers(request, item_slug):
             order_item_create.total_price = item.price
             item.customer.add(request.user)  
             item.save()              
-            order_item_create.save()   
-                      
+            order_item_create.save()                         
             return redirect('store:cart')                                                                                                                                                                                                                                                                                              
         else:
             return redirect('account:sign-in')
@@ -421,21 +422,9 @@ def caffeinated_update(request, item_slug, order_item_id):
             # If the item is already in the OrderItem table then it will just increase the quantity and the price.                                                            
             instance.total_price += instance.price                    
             instance.save() 
+            
             order_item = OrderItem.objects.filter(user=request.user, item=item, hot_cold=instance.hot_cold, milk=instance.milk, whip_cream=instance.whip_cream, syrup_pump=instance.syrup_pump, espresso_shot=instance.espresso_shot, ordered=False, in_cart=True)                                       
-            if order_item.count() > 1:
-                for data in order_item:                   
-                    if data.id != order_item_id:
-                        order_item_delete = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
-                        order_item_add = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
-                        # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
-                        if order_item_add.quantity > order_item_delete.quantity:
-                            order_item_add.quantity += order_item_delete.quantity
-                            order_item_add.save()
-                            order_item_delete.delete()                            
-                            return redirect('store:cart')                     
-                        order_item_delete.quantity += order_item_add.quantity
-                        order_item_delete.save()     
-                        order_item_add.delete()                                                                                      
+            update_duplicate(request, item, order_item, order_item_id)                                                                                              
                         
         return redirect('store:cart')
     
@@ -466,7 +455,12 @@ def only_water_update(request, category, item_slug, order_item_id):
                  
             instance.total_price += instance.price                    
             instance.save()     
-            return redirect('store:cart')
+            
+            # This will check if there has duplicate item.  
+            order_item = OrderItem.objects.filter(user=request.user, item=item, bottled_water=instance.bottled_water, ordered=False, in_cart=True)                                       
+            update_duplicate(request, item, order_item, order_item_id)       
+            
+        return redirect('store:cart')
         
     context = {'item':item, 'order_item': order_item, 'only_water_form': only_water_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-update.html', context)
@@ -501,8 +495,14 @@ def pizza_update(request, item_slug, order_item_id):
                 instance.cheese = True     
                 instance.total_price += add_on.cheese
                 
+            # If the item is already in the OrderItem table then it will just increase the quantity and the price.                                                                                            
             instance.total_price += instance.price                    
-            instance.save()                                                                
+            instance.save()    
+
+            # This will check if there has duplicate item.  
+            order_item = OrderItem.objects.filter(user=request.user, item=item, plain_rice=instance.plain_rice, rice_platter=instance.rice_platter, aligue_platter=instance.aligue_platter, bottled_water=instance.bottled_water, ordered=False, in_cart=True)                                       
+            update_duplicate(request, item, order_item, order_item_id)                                                                       
+            
         return redirect('store:cart')
 
     context = {'item':item, 'order_item': order_item, 'pizza_form': pizza_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
@@ -519,10 +519,8 @@ def main_update(request, item_slug, order_item_id):
     if request.method == 'POST':
         main_form = MainForm(request.POST, instance=order_item)
         if main_form.is_valid():
-            instance = main_form.save(commit=False)
-                  
-            instance.price = item.price
-                                 
+            instance = main_form.save(commit=False)                  
+            instance.price = item.price                                 
             instance.total_price = 0
             # This update among add-ons.
             if main_form.cleaned_data['plain_rice']:
@@ -538,11 +536,15 @@ def main_update(request, item_slug, order_item_id):
                 instance.bottled_water = True     
                 instance.total_price += add_on.bottled_water
                 
+            # If the item is already in the OrderItem table then it will just increase the quantity and the price.                                                                            
             instance.total_price += instance.price                    
-            instance.save()                                                                
-            return redirect('store:cart') 
+            instance.save()            
             
-
+            order_item = OrderItem.objects.filter(user=request.user, item=item, plain_rice=instance.plain_rice, rice_platter=instance.rice_platter, aligue_platter=instance.aligue_platter, bottled_water=instance.bottled_water, ordered=False, in_cart=True)                                       
+            update_duplicate(request, item, order_item, order_item_id)                                                      
+            
+        return redirect('store:cart') 
+            
     context = {'item':item, 'order_item': order_item, 'main_form': main_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-update.html', context)   
 
@@ -602,10 +604,6 @@ def specific_category(request, item_category):
 
     context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe, 'order_quantity': order_quantity(request)}
     return render(request, 'store/specific-category.html', context)    
-
-@login_required
-def buy_now(request, item_slug):        
-    return redirect('store:home', item_slug=item_slug)
 
 @login_required
 def cart(request):
@@ -773,7 +771,7 @@ def delivery(request):
                 Payment.objects.create(user=request.user, delivery=delivery_form.instance, order=customer_order, subtotal=subtotal, delivery_fee=delivery_fee, total=total)  
                 return redirect('store:thank-you') 
             else:
-                messages.error(request, 'Please select a label between label or home')      
+                messages.error(request, 'Please select a label between office or home')      
 
     context = {'delivery_form': delivery_form, 'delivery_fee': delivery_fee, 'districts_delivery_fee': districts_delivery_fee, 'all_order': all_order, 'sub_total': sub_total(request), 'total': total, 'order_quantity': order_quantity(request), 'customer_exists': order.exists()}
     return render(request, 'store/delivery.html', context)
@@ -833,10 +831,42 @@ def pending_orders(request):
     add_on = add_on.first()    
     # This will get all what you ordered and display the information that you input.
     all_order = Order.objects.filter(user=request.user, ordered=True).order_by('-id')    
-        
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
     # The admin has only the access to make the finish_transaction field turns into True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
+    
+    # This function will delete the OrderItem and Delivery or Collection table.    
+    delete_transactions(request)
+
+    # If the customer has no order yet.
+    if not all_order.exists():
+        context = {'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}   
+        return render(request, 'store/delivery.html', context)              
+    
+    context = {'all_order': all_order, 'payment': payment, 'add_on': add_on, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
+    return render(request, 'store/pending-orders.html', context)
+
+# This function is for an update item when there is already has the same item and add ons then it will be deleted one of them and add the quantity to the single item.
+def update_duplicate(request, item,  order_item, order_item_id):
+        if order_item.count() > 1:
+            for data in order_item:                   
+                if data.id != order_item_id:
+                    duplicate_order_item = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
+                    current_order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
+                    
+                    # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
+                    if current_order_item.quantity > duplicate_order_item.quantity:
+                        current_order_item.quantity += duplicate_order_item.quantity
+                        current_order_item.save()
+                        duplicate_order_item.delete()                            
+                        return redirect('store:cart')
+                                         
+                    duplicate_order_item.quantity += current_order_item.quantity
+                    duplicate_order_item.save()     
+                    current_order_item.delete()
+
+# This function will delete all the OrderItem, Delivery or Collection if the customer transaction is finish.
+def delete_transactions(request):
     transaction_completed = Payment.objects.filter(user=request.user, finish_transaction=True).order_by('-id') 
     # If the admin click the "finish_transaction" field check this will turns into to True.    
     if transaction_completed.exists():
@@ -847,12 +877,4 @@ def pending_orders(request):
             
         # Then that Order table will be deleted.
         for data in transaction_completed:
-            data.order.delete()
-
-    # If the customer has no order yet.
-    if not all_order.exists():
-        context = {'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}   
-        return render(request, 'store/delivery.html', context)              
-    
-    context = {'all_order': all_order, 'payment': payment, 'add_on': add_on, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
-    return render(request, 'store/pending-orders.html', context)
+            data.order.delete()              
