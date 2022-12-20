@@ -5,31 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 # Create your views here.
-def order_quantity(request):
-    if request.user.is_authenticated:
-        customer = Order.objects.filter(user=request.user, ordered=False)
-        if customer.exists():                    
-            return customer.first().items.all().count()
-    else:
-        return 0
-
-def sub_total(request):
-    order = Order.objects.filter(user=request.user, ordered=False)    
-    customer_order = order.first()   
-    if customer_order:
-        all_order = customer_order.items.all().order_by('-id')  
-        total = 0
-        for item in all_order:
-            # If it is the quantity of item is zero then it will delete to the OrderItem table.
-            if item.quantity <= 0:
-                order_item = OrderItem.objects.get(item=item.item)
-                customer_order.items.remove(order_item)
-            # Calculate the total of order product.                
-            total += item.get_total_item_price()  
-        return total
-    else:
-        return 0
-
 def home(request):    
     # This function will delete the OrderItem and Delivery or Collection table.
     delete_transactions(request)
@@ -424,25 +399,7 @@ def caffeinated_update(request, item_slug, order_item_id):
             instance.save() 
             
             order_item = OrderItem.objects.filter(user=request.user, item=item, hot_cold=instance.hot_cold, milk=instance.milk, whip_cream=instance.whip_cream, syrup_pump=instance.syrup_pump, espresso_shot=instance.espresso_shot, ordered=False, in_cart=True)                                       
-<<<<<<< HEAD
-            if order_item.count() > 1:
-                for data in order_item:                   
-                    if data.id != order_item_id:
-                        order_item_delete = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
-                        order_item_add = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
-                        # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
-                        if order_item_add.quantity > order_item_delete.quantity:
-                            order_item_add.quantity += order_item_delete.quantity
-                            order_item_add.save()
-                            order_item_delete.delete()                            
-                            return redirect('store:cart')    
-                                         
-                        order_item_delete.quantity += order_item_add.quantity
-                        order_item_delete.save()     
-                        order_item_add.delete()                                                                                      
-=======
             update_duplicate(request, item, order_item, order_item_id)                                                                                              
->>>>>>> editing
                         
         return redirect('store:cart')
     
@@ -866,22 +823,47 @@ def pending_orders(request):
 
 # This function is for an update item when there is already has the same item and add ons then it will be deleted one of them and add the quantity to the single item.
 def update_duplicate(request, item,  order_item, order_item_id):
-        if order_item.count() > 1:
-            for data in order_item:                   
-                if data.id != order_item_id:
-                    duplicate_order_item = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
-                    current_order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
-                    
-                    # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
-                    if current_order_item.quantity > duplicate_order_item.quantity:
-                        current_order_item.quantity += duplicate_order_item.quantity
-                        current_order_item.save()
-                        duplicate_order_item.delete()                            
-                        return redirect('store:cart')
-                                         
-                    duplicate_order_item.quantity += current_order_item.quantity
-                    duplicate_order_item.save()     
-                    current_order_item.delete()
+    if order_item.count() > 1:
+        for data in order_item:                   
+            if data.id != order_item_id:
+                duplicate_order_item = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
+                current_order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
+                
+                # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
+                if current_order_item.quantity > duplicate_order_item.quantity:
+                    current_order_item.quantity += duplicate_order_item.quantity
+                    current_order_item.save()
+                    duplicate_order_item.delete()                            
+                    return redirect('store:cart')
+                                     
+                duplicate_order_item.quantity += current_order_item.quantity
+                duplicate_order_item.save()     
+                current_order_item.delete()          
+
+def order_quantity(request):
+    if request.user.is_authenticated:
+        customer = Order.objects.filter(user=request.user, ordered=False)
+        if customer.exists():                    
+            return customer.first().items.all().count()
+    else:
+        return 0
+
+def sub_total(request):
+    order = Order.objects.filter(user=request.user, ordered=False)    
+    customer_order = order.first()   
+    if customer_order:
+        all_order = customer_order.items.all().order_by('-id')  
+        total = 0
+        for item in all_order:
+            # If it is the quantity of item is zero then it will delete to the OrderItem table.
+            if item.quantity <= 0:
+                order_item = OrderItem.objects.get(item=item.item)
+                customer_order.items.remove(order_item)
+            # Calculate the total of order product.                
+            total += item.get_total_item_price()  
+        return total
+    else:
+        return 0
 
 # This function will delete all the OrderItem, Delivery or Collection if the customer transaction is finish.
 def delete_transactions(request):
@@ -895,4 +877,4 @@ def delete_transactions(request):
             
         # Then that Order table will be deleted.
         for data in transaction_completed:
-            data.order.delete()              
+            data.order.delete()        
