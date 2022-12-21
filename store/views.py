@@ -223,6 +223,21 @@ def detail_only_water(request, category, item_slug):
     context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
+def favorite_list(request):
+    order = Order.objects.filter(user=request.user, ordered=False)         
+    # If the customer has no order yet.    
+    if not order.exists():  
+        return no_order_yet(request, 'favorites')         
+
+    context = {'order_quantity': order_quantity(request)}
+    return render(request, 'store/favorite-list.html', context)
+
+# This function will display the page if the customer has no order yet.
+def no_order_yet(request, page_header_title):   
+    # If the customer has no order yet.
+    context = {'page_header_title': page_header_title, 'order_quantity': order_quantity(request)}   
+    return render(request, 'store/order-first.html', context) 
+
 # This kind of detail is only for the category of Pizza.
 def detail_pizza(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)  
@@ -584,29 +599,26 @@ def specific_category(request, item_category):
 @login_required
 def cart(request):
     order = Order.objects.filter(user=request.user, ordered=False)    
+    # If the customer has no order yet.
+    if not order.exists():
+        return no_order_yet(request, 'cart')
     
-    if order.exists():
-        customer_order = order.first()
-        all_order = customer_order.items.all().order_by('-id')  
-        # Delete the customer in Order table if the customer has no order left in cart.
-        order_count = customer_order.items.all().count()                      
-        if order_count == 0:
-            Order.objects.get(user=request.user, ordered=False).delete()
-            
-        context = {'all_order': all_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count, 'customer_exists': order.exists()}
-    else:        
-        context = {'customer_exists': order.exists()}
+    customer_order = order.first()
+    all_order = customer_order.items.all().order_by('-id')  
+    # Delete the customer in Order table if the customer has no order left in cart.
+    order_count = customer_order.items.all().count()                      
+    if order_count == 0:
+        Order.objects.get(user=request.user, ordered=False).delete()
         
+    context = {'all_order': all_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count}           
     return render(request, 'store/cart.html', context)
 
 @login_required
 def checkout(request):
-    order = Order.objects.filter(user=request.user, ordered=False)         
-       
+    order = Order.objects.filter(user=request.user, ordered=False)                
     # If the customer has no order yet.
     if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)   
+        return no_order_yet(request, 'checkout') 
 
     # All the customer order will display on right side navigation.
     all_order = order.first().items.all().order_by('-id') 
@@ -677,20 +689,19 @@ def remove_product(request, item_slug, order_item_id):
 
 @login_required
 def delivery(request):
-    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.    
-    maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee
-    subtotal = sub_total(request)          
-    if subtotal < maximum_delivery_fee:
-        messages.error(request, f'Please add your order to make it ' + str(maximum_delivery_fee) + ' amount to proceed to delivery. You could also click the collection instead.')              
-        return redirect('store:checkout')
-
-    order = Order.objects.filter(user=request.user, ordered=False) 
-    order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True) 
-    
+    order = Order.objects.filter(user=request.user, ordered=False)     
     # If the customer has no order yet.
     if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)     
+        return no_order_yet(request, 'delivery')
+    
+    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.    
+    maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee    
+    subtotal = sub_total(request)          
+    if subtotal < maximum_delivery_fee:
+        messages.error(request, f'Please add your order to make it ₱' + str(maximum_delivery_fee) + ' amount to proceed to delivery. You could also click the collection instead.')              
+        return redirect('store:checkout')
+
+    order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True)     
 
     # Get the customer orders. Calculate subtotal and total.
     customer_order = order.first() 
@@ -753,23 +764,21 @@ def delivery(request):
     return render(request, 'store/delivery.html', context)
 
 @login_required
-def collection(request):
-    collection_form = CollectionForm()
+def collection(request):    
     order = Order.objects.filter(user=request.user, ordered=False)     
-    order_items = OrderItem.objects.filter(user=request.user, ordered=False) 
+    # If the customer has no order yet.
+    if not order.exists():
+        return no_order_yet(request, 'collection')
 
     # Get the customer orders. Calculate subtotal and total.    
     # The subtotal and total is the same due to had no delivery fee charge.
-    customer_order = order.first()    
+    order_items = OrderItem.objects.filter(user=request.user, ordered=False)     
+    customer_order = order.first()           
     customer_items = order_items.all()   
-    all_order = customer_order.items.all().order_by('-id')    
+    all_order = customer_order.items.all().order_by('-id') 
     total = sub_total(request)
-    
-    # If the customer has no order yet.
-    if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)    
 
+    collection_form = CollectionForm()    
     if request.method == 'POST':
         collection_form = CollectionForm(request.POST)               
         if collection_form.is_valid():
@@ -803,21 +812,21 @@ def thank_you(request):
 # This where your pending orders show.
 @login_required
 def pending_orders(request):
+    # This will get all what you ordered and display the information that you input.    
+    all_order = Order.objects.filter(user=request.user, ordered=True).order_by('-id')  
+    # If the customer has no order yet.
+    if not all_order.exists():
+        return no_order_yet(request, 'pending orders') 
+     
     add_on = AddOn.objects.all()
     add_on = add_on.first()    
-    # This will get all what you ordered and display the information that you input.
-    all_order = Order.objects.filter(user=request.user, ordered=True).order_by('-id')    
+  
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
     # The admin has only the access to make the finish_transaction field turns into True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
     
     # This function will delete the OrderItem and Delivery or Collection table.    
-    delete_transactions(request)
-
-    # If the customer has no order yet.
-    if not all_order.exists():
-        context = {'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}   
-        return render(request, 'store/delivery.html', context)              
+    delete_transactions(request)           
     
     context = {'all_order': all_order, 'payment': payment, 'add_on': add_on, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
     return render(request, 'store/pending-orders.html', context)
@@ -879,3 +888,5 @@ def delete_transactions(request):
         # Then that Order table will be deleted.
         for data in transaction_completed:
             data.order.delete()        
+
+    

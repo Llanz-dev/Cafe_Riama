@@ -12,13 +12,11 @@
 {% block content %}        
     <!-- Display all the add to cart -->
     <div class="container-lg my-5">
-      {% if customer_exists %}                                      
       <div class="row justify-content-between">
           <!-- Shopping bag -->
           <div class="order-1 col-md-8">                
             <h2 class="mb-5">Shopping bag <img src="{% static 'icons/shopping-bag.png' %}" alt="Shopping bag icon"></h2>           
-            <div class="scroll-activate">   
-              
+            <div class="scroll-activate">                 
               {% for item in all_order %}
                 <div class="row">
                   <div class="col-4">
@@ -80,10 +78,6 @@
               </a>
           </div>            
       </div>
-  
-      {% else %}
-        {% include 'store/sections/order-first.html' %}
-      {% endif %}
     </div> 
 {% endblock content %}
 
