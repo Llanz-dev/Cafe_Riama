@@ -1,5 +1,5 @@
 from .forms import CaffeinatedForm, OnlyWaterForm, PizzaForm, MainForm, DeliveryForm, CollectionForm
-from .models import AddOn, Item, OrderItem, Order, DeliveryFee, Payment
+from .models import AddOn, Item, FavoriteItem, OrderItem, Order, DeliveryFee, Payment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -167,6 +167,13 @@ def detail_coolers(request, item_slug):
 # This kind of detail is only for those items that its add-ons is only bottled water.
 def detail_only_water(request, category, item_slug):
     item = Item.objects.get(category=category, item_slug=item_slug)  
+    favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
+    in_favorite_list = False    
+    
+    if favorite_list:
+        in_favorite_list = True
+        print('Favorite list:', favorite_list)
+        
     only_water_form = OnlyWaterForm()
     add_on = AddOn.objects.all()
     add_on = add_on.first()   
@@ -220,23 +227,27 @@ def detail_only_water(request, category, item_slug):
         else:
             return redirect('account:sign-in')
                                           
-    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list, 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 def favorite_list(request):
-    order = Order.objects.filter(user=request.user, ordered=False)         
+    favorite_item = FavoriteItem.objects.filter(user=request.user)           
     # If the customer has no order yet.    
-    if not order.exists():  
+    if not favorite_item.exists():  
         return no_order_yet(request, 'favorites')         
-
-    context = {'order_quantity': order_quantity(request)}
+    
+    context = {'favorite_item': favorite_item,'order_quantity': order_quantity(request)}
     return render(request, 'store/favorite-list.html', context)
 
-# This function will display the page if the customer has no order yet.
-def no_order_yet(request, page_header_title):   
-    # If the customer has no order yet.
-    context = {'page_header_title': page_header_title, 'order_quantity': order_quantity(request)}   
-    return render(request, 'store/order-first.html', context) 
+def add_favorite(request, item_slug):
+    item = Item.objects.get(item_slug=item_slug)                                        
+    favorite_item = FavoriteItem.objects.create(user=request.user, item=item)
+    favorite_item.save()
+    return redirect('store:favorite-list')
+
+def remove_favorite(request, item_slug):
+    print('Remove favorite:', item_slug)
+    return redirect('store:favorite-list')
 
 # This kind of detail is only for the category of Pizza.
 def detail_pizza(request, item_slug):
@@ -598,20 +609,23 @@ def specific_category(request, item_category):
 
 @login_required
 def cart(request):
-    order = Order.objects.filter(user=request.user, ordered=False)    
+    order = Order.objects.filter(user=request.user, ordered=False)  
     # If the customer has no order yet.
     if not order.exists():
         return no_order_yet(request, 'cart')
     
-    customer_order = order.first()
-    all_order = customer_order.items.all().order_by('-id')  
+    customer_order = order.first()    
+    all_order = customer_order.items.all().order_by('-id')     
+    
     # Delete the customer in Order table if the customer has no order left in cart.
     order_count = customer_order.items.all().count()                      
     if order_count == 0:
         Order.objects.get(user=request.user, ordered=False).delete()
-        
-    context = {'all_order': all_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count}           
-    return render(request, 'store/cart.html', context)
+    if all_order.exists():
+        context = {'all_order': all_order, 'customer_order': customer_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count}           
+        return render(request, 'store/cart.html', context)
+    else:
+        return no_order_yet(request, 'cart')
 
 @login_required
 def checkout(request):
@@ -889,4 +903,8 @@ def delete_transactions(request):
         for data in transaction_completed:
             data.order.delete()        
 
-    
+# This function will display the page if the customer has no order yet.
+def no_order_yet(request, page_header_title):   
+    # If the customer has no order yet.
+    context = {'page_header_title': page_header_title, 'order_quantity': order_quantity(request)}   
+    return render(request, 'store/order-first.html', context) 

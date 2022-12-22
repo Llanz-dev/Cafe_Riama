@@ -125,6 +125,13 @@ class OrderItem(models.Model):
 
     def get_total_item_price(self):   
         return self.quantity * self.total_price 
+
+class FavoriteItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.item.name}'
       
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

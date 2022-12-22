@@ -24,6 +24,11 @@ body {
     transition: .20s;
 }
 
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
 .white-transition-button:hover{
     background-color: white;
     transition: .20s;
