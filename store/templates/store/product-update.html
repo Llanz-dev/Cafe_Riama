@@ -127,7 +127,11 @@
                 {% endif %} 
                 <div class="mt-4">
                   <button class="letter-spacing text-uppercase btn btn-md btn-primary">Update</button>
-                  <a class="letter-spacing text-uppercase btn btn-md btn-light"><img src="{% static 'bootstrap/icons/heart.svg' %}" alt="Heart icon"></a>                                      
+                  {% if in_favorite_list %}                                        
+                    <a href="{% url 'store:add-favorite' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-light disabled"><img src="{% static 'bootstrap/icons/heart.svg' %}" alt="Heart icon"></a>                                      
+                  {% else %}
+                    <a href="{% url 'store:add-favorite' item.item_slug %}" class="letter-spacing text-uppercase btn btn-md btn-light"><img src="{% static 'bootstrap/icons/heart.svg' %}" alt="Heart icon"></a>                                      
+                  {% endif %}
                 </div>
               </form>             
         </div>

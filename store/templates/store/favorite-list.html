@@ -14,27 +14,26 @@
                 <img src="{{ item.item.image.url }}" alt="product-img" class="img-fluid">
               </div>
               <div class="col-10">
-                <span class="text-uppercase letter-spacing border px-2">{{ item.item.category }}</span>                                          
+                <span class="text-uppercase letter-spacing border px-2" style="font-size: 14px;">{{ item.item.category }}</span>                                          
                 {% if item.item.category == 'Coffee Classics' or item.item.category == 'Special Latte' %}                                          
-                  <h4 class="mt-2"><a href="{% url 'store:caffeinated-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }} ({{ item.hot_cold }})</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                  <h5 class="mt-2"><a href="{{ item.item.detail_caffeinated_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
                 {% elif item.item.category == 'Frappe' or item.item.category == 'Other Drinks' %}
-                  <h4 class="mt-2"><a href="{% url 'store:coolers' item.item.item_slug %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                  <h5 class="mt-2"><a href="{{ item.item.detail_coolers_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
                 {% elif item.item.category == 'Starters' or item.item.category == 'Silog Meals' or item.item.category == 'Burger with Fries' or item.item.category == 'Pasta' %}
-                  <h4 class="mt-2"><a href="{% url 'store:only-water-update' item.item.category item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h4>
+                  <h5 class="mt-2"><a href="{{ item.item.detail_only_water_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
                 {% elif item.item.category == 'Pizza' %}
-                  <h4 class="mt-2"><a href="{% url 'store:pizza-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
+                  <h5 class="mt-2"><a href="{{ item.item.detail_pizza_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
                 {% elif item.item.category == 'All About Wings' or item.item.category == 'Main Course' or item.item.category == 'Sizzlers' %}
-                  <h4 class="mt-2"><a href="{% url 'store:main-update' item.item.item_slug item.id %}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.get_total_item_price|intcomma }}</span></h4>
-                {% endif %}          
-                <div class="mt-4 d-flex align-items-center">
-                  <button class="letter-spacing text-uppercase btn btn-sm btn-primary">Add to cart</button>
-                  <a href="{% url 'store:remove-favorite' item.item.item_slug %}" class="disabled text-light text-decoration-none mx-4">Remove</a>
-                </div>
-                </div>
+                  <h5 class="mt-2"><a href="{{ item.item.detail_main_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
+                {% endif %}      
+                <div style="margin: 1rem 0;"></div>   
+                <a href="{% url 'store:remove-favorite' item.item.item_slug %}" class="text-light text-decoration-none">Remove</a>
               </div>
               <hr class="my-5">
-            </div>  
-          {% endfor %}             
+            </div>
+          {% endfor %}  
+        </div>  
+
         </div>  
     </div>
 </div>

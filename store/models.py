@@ -67,10 +67,6 @@ class Item(models.Model):
     # URL of this function is for the category of Coolers.
     def detail_coolers_url(self):
         return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
-    
-    # URL of this function is for the category of Coolers.
-    def detail_coolers_url(self):
-        return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
 
     # URL of the items that are only bottled water is their options.
     # The categories that are belong to this is the following: Starters, Silog Meals, Burger with Fries, and Pasta.

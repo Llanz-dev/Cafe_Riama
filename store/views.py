@@ -129,7 +129,7 @@ def detail_caffeinated(request, item_slug):
         else:
             return redirect('account:sign-in')                                              
         
-    context = {'item': item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 # This kind of detail is only for the category of Coolers.
@@ -161,19 +161,12 @@ def detail_coolers(request, item_slug):
         else:
             return redirect('account:sign-in')
                                           
-    context = {'item': item, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 # This kind of detail is only for those items that its add-ons is only bottled water.
 def detail_only_water(request, category, item_slug):
-    item = Item.objects.get(category=category, item_slug=item_slug)  
-    favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
-    in_favorite_list = False    
-    
-    if favorite_list:
-        in_favorite_list = True
-        print('Favorite list:', favorite_list)
-        
+    item = Item.objects.get(category=category, item_slug=item_slug)              
     only_water_form = OnlyWaterForm()
     add_on = AddOn.objects.all()
     add_on = add_on.first()   
@@ -227,11 +220,11 @@ def detail_only_water(request, category, item_slug):
         else:
             return redirect('account:sign-in')
                                           
-    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 def favorite_list(request):
-    favorite_item = FavoriteItem.objects.filter(user=request.user)           
+    favorite_item = FavoriteItem.objects.filter(user=request.user).order_by('-id')           
     # If the customer has no order yet.    
     if not favorite_item.exists():  
         return no_order_yet(request, 'favorites')         
@@ -243,10 +236,11 @@ def add_favorite(request, item_slug):
     item = Item.objects.get(item_slug=item_slug)                                        
     favorite_item = FavoriteItem.objects.create(user=request.user, item=item)
     favorite_item.save()
-    return redirect('store:favorite-list')
+    return redirect('store:favorite-list') 
 
 def remove_favorite(request, item_slug):
-    print('Remove favorite:', item_slug)
+    item = Item.objects.get(item_slug=item_slug)
+    FavoriteItem.objects.get(item=item).delete()
     return redirect('store:favorite-list')
 
 # This kind of detail is only for the category of Pizza.
@@ -314,7 +308,7 @@ def detail_pizza(request, item_slug):
         else:
             return redirect('account:sign-in')
     
-    context = {'item': item, 'pizza_form': pizza_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'pizza_form': pizza_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 # This kind of detail is for the following categories:.
@@ -382,7 +376,7 @@ def detail_main(request, item_slug):
         else:
             return redirect('account:sign-in')
     
-    context = {'item': item, 'main_form': main_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'main_form': main_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context) 
 
 @login_required
@@ -587,7 +581,7 @@ def specific_category(request, item_category):
     special_latte = None
     frappe = None
     other_drinks = None        
-    categorized_items = None        
+    categorized_items = None      
     
     if item_category == 'Caffeinated':
         coffee_classics = Item.objects.filter(category='Coffee Classics')
@@ -603,7 +597,7 @@ def specific_category(request, item_category):
     else:
         categorized_items = Item.objects.filter(category=item_category)
         items_category = categorized_items.first().category
-
+            
     context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe, 'order_quantity': order_quantity(request)}
     return render(request, 'store/specific-category.html', context)    
 
@@ -908,3 +902,13 @@ def no_order_yet(request, page_header_title):
     # If the customer has no order yet.
     context = {'page_header_title': page_header_title, 'order_quantity': order_quantity(request)}   
     return render(request, 'store/order-first.html', context) 
+
+# This function will check the item if it is in the favorite list.
+def in_favorite_list(request, item):
+    favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
+    is_favorite = False    
+    
+    if favorite_list:
+        is_favorite = True
+        
+    return is_favorite
