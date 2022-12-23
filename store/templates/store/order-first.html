@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container-lg">
+    <h2 class="letter-spacing text-uppercase fw-bold my-5">{{ page_header_title }}</h2>
+    <div class="pb-4 pt-3 px-4 background-light" style="margin-bottom: 22.2rem;">
+        <h3>You have no {{ page_header_title }} yet</h3>
+        <p class="mb-5">Instead of feeling empty, why don't you order an item to see if you can find some items you like?</p>
+        <a href="{% url 'store:all-product' %}" class="border border-secondary px-3 py-2 text-white text-decoration-none white-transition-button">Go Shopping!</a>
+    </div>
+</div>
+{% endblock content %}
+    

@@ -74,13 +74,18 @@
                 </a>
               </li> 
               <li class="nav-item">
-                <a href="{% url 'account:sign-out' %}" class="nav-link active">
-                  SignOut
+                <a href="{% url 'store:favorite-list' %}" class="nav-link active">
+                  Favorites
                 </a>
-              </li> 
+              </li>               
               <li class="nav-item border border-light">
                 <a class="nav-link active">
                   {{ request.user.username }}
+                </a>
+              </li> 
+              <li class="nav-item">
+                <a href="{% url 'account:sign-out' %}" class="nav-link active">
+                  SignOut
                 </a>
               </li> 
               {% endif %}

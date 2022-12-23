@@ -67,10 +67,6 @@ class Item(models.Model):
     # URL of this function is for the category of Coolers.
     def detail_coolers_url(self):
         return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
-    
-    # URL of this function is for the category of Coolers.
-    def detail_coolers_url(self):
-        return reverse('store:coolers', kwargs={'item_slug': self.item_slug})
 
     # URL of the items that are only bottled water is their options.
     # The categories that are belong to this is the following: Starters, Silog Meals, Burger with Fries, and Pasta.
@@ -125,6 +121,13 @@ class OrderItem(models.Model):
 
     def get_total_item_price(self):   
         return self.quantity * self.total_price 
+
+class FavoriteItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.item.name}'
       
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

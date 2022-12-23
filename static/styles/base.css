@@ -24,9 +24,16 @@ body {
     transition: .20s;
 }
 
-.grey-transition:hover{
-    background-color: rgb(66, 66, 66);
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.white-transition-button:hover{
+    background-color: white;
     transition: .20s;
+    color: black !important;
+    border: 1px solid black !important;
 }
 
 @media screen and (max-width: 575px) {

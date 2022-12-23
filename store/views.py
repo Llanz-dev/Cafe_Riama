@@ -1,13 +1,14 @@
 from .forms import CaffeinatedForm, OnlyWaterForm, PizzaForm, MainForm, DeliveryForm, CollectionForm
-from .models import AddOn, Item, OrderItem, Order, DeliveryFee, Payment
+from .models import AddOn, Item, FavoriteItem, OrderItem, Order, DeliveryFee, Payment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-# Create your views here.
+# Create your views here.    
 def home(request):    
     # This function will delete the OrderItem and Delivery or Collection table.
-    delete_transactions(request)
+    if request.user.is_authenticated:
+        delete_transactions(request)
     
     items_caffeinated_two = Item.objects.filter(category='Coffee Classics')[:2]
     items_caffeinated_four = Item.objects.filter(category='Coffee Classics')[2:4]
@@ -128,7 +129,7 @@ def detail_caffeinated(request, item_slug):
         else:
             return redirect('account:sign-in')                                              
         
-    context = {'item': item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 # This kind of detail is only for the category of Coolers.
@@ -160,12 +161,12 @@ def detail_coolers(request, item_slug):
         else:
             return redirect('account:sign-in')
                                           
-    context = {'item': item, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 # This kind of detail is only for those items that its add-ons is only bottled water.
 def detail_only_water(request, category, item_slug):
-    item = Item.objects.get(category=category, item_slug=item_slug)  
+    item = Item.objects.get(category=category, item_slug=item_slug)              
     only_water_form = OnlyWaterForm()
     add_on = AddOn.objects.all()
     add_on = add_on.first()   
@@ -219,8 +220,28 @@ def detail_only_water(request, category, item_slug):
         else:
             return redirect('account:sign-in')
                                           
-    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'only_water_form': only_water_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
+
+def favorite_list(request):
+    favorite_item = FavoriteItem.objects.filter(user=request.user).order_by('-id')           
+    # If the customer has no order yet.    
+    if not favorite_item.exists():  
+        return no_order_yet(request, 'favorites')         
+    
+    context = {'favorite_item': favorite_item,'order_quantity': order_quantity(request)}
+    return render(request, 'store/favorite-list.html', context)
+
+def add_favorite(request, item_slug):
+    item = Item.objects.get(item_slug=item_slug)                                        
+    favorite_item = FavoriteItem.objects.create(user=request.user, item=item)
+    favorite_item.save()
+    return redirect('store:favorite-list') 
+
+def remove_favorite(request, item_slug):
+    item = Item.objects.get(item_slug=item_slug)
+    FavoriteItem.objects.get(item=item).delete()
+    return redirect('store:favorite-list')
 
 # This kind of detail is only for the category of Pizza.
 def detail_pizza(request, item_slug):
@@ -287,7 +308,7 @@ def detail_pizza(request, item_slug):
         else:
             return redirect('account:sign-in')
     
-    context = {'item': item, 'pizza_form': pizza_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'pizza_form': pizza_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
 
 # This kind of detail is for the following categories:.
@@ -355,7 +376,7 @@ def detail_main(request, item_slug):
         else:
             return redirect('account:sign-in')
     
-    context = {'item': item, 'main_form': main_form, 'add_on': add_on, 'order_quantity': order_quantity(request)}
+    context = {'item': item, 'main_form': main_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context) 
 
 @login_required
@@ -560,7 +581,7 @@ def specific_category(request, item_category):
     special_latte = None
     frappe = None
     other_drinks = None        
-    categorized_items = None        
+    categorized_items = None      
     
     if item_category == 'Caffeinated':
         coffee_classics = Item.objects.filter(category='Coffee Classics')
@@ -576,36 +597,36 @@ def specific_category(request, item_category):
     else:
         categorized_items = Item.objects.filter(category=item_category)
         items_category = categorized_items.first().category
-
+            
     context = {'categorized_items': categorized_items, 'items_category': items_category, 'coffee_classics': coffee_classics, 'special_latte': special_latte, 'other_drinks': other_drinks, 'frappe': frappe, 'order_quantity': order_quantity(request)}
     return render(request, 'store/specific-category.html', context)    
 
 @login_required
 def cart(request):
-    order = Order.objects.filter(user=request.user, ordered=False)    
+    order = Order.objects.filter(user=request.user, ordered=False)  
+    # If the customer has no order yet.
+    if not order.exists():
+        return no_order_yet(request, 'cart')
     
-    if order.exists():
-        customer_order = order.first()
-        all_order = customer_order.items.all().order_by('-id')  
-        # Delete the customer in Order table if the customer has no order left in cart.
-        order_count = customer_order.items.all().count()                      
-        if order_count == 0:
-            Order.objects.get(user=request.user, ordered=False).delete()
-            
-        context = {'all_order': all_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count, 'customer_exists': order.exists()}
-    else:        
-        context = {'customer_exists': order.exists()}
-        
-    return render(request, 'store/cart.html', context)
+    customer_order = order.first()    
+    all_order = customer_order.items.all().order_by('-id')     
+    
+    # Delete the customer in Order table if the customer has no order left in cart.
+    order_count = customer_order.items.all().count()                      
+    if order_count == 0:
+        Order.objects.get(user=request.user, ordered=False).delete()
+    if all_order.exists():
+        context = {'all_order': all_order, 'customer_order': customer_order, 'order_quantity': order_quantity(request), 'sub_total': sub_total(request), 'count_order': order_count}           
+        return render(request, 'store/cart.html', context)
+    else:
+        return no_order_yet(request, 'cart')
 
 @login_required
 def checkout(request):
-    order = Order.objects.filter(user=request.user, ordered=False)         
-       
+    order = Order.objects.filter(user=request.user, ordered=False)                
     # If the customer has no order yet.
     if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)   
+        return no_order_yet(request, 'checkout') 
 
     # All the customer order will display on right side navigation.
     all_order = order.first().items.all().order_by('-id') 
@@ -676,20 +697,19 @@ def remove_product(request, item_slug, order_item_id):
 
 @login_required
 def delivery(request):
-    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.    
-    maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee
-    subtotal = sub_total(request)          
-    if subtotal < maximum_delivery_fee:
-        messages.error(request, f'Please add your order to make it ' + str(maximum_delivery_fee) + ' amount to proceed to delivery. You could also click the collection instead.')              
-        return redirect('store:checkout')
-
-    order = Order.objects.filter(user=request.user, ordered=False) 
-    order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True) 
-    
+    order = Order.objects.filter(user=request.user, ordered=False)     
     # If the customer has no order yet.
     if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)     
+        return no_order_yet(request, 'delivery')
+    
+    # If the sum of subtotal is below 300 that is the minimum amount of delivery fee then you cannot proceed to delivery.    
+    maximum_delivery_fee = DeliveryFee.objects.all().first().maximum_delivery_fee    
+    subtotal = sub_total(request)          
+    if subtotal < maximum_delivery_fee:
+        messages.error(request, f'Please add your order to make it ₱' + str(maximum_delivery_fee) + ' amount to proceed to delivery. You could also click the collection instead.')              
+        return redirect('store:checkout')
+
+    order_items = OrderItem.objects.filter(user=request.user, ordered=False, in_cart=True)     
 
     # Get the customer orders. Calculate subtotal and total.
     customer_order = order.first() 
@@ -752,23 +772,21 @@ def delivery(request):
     return render(request, 'store/delivery.html', context)
 
 @login_required
-def collection(request):
-    collection_form = CollectionForm()
+def collection(request):    
     order = Order.objects.filter(user=request.user, ordered=False)     
-    order_items = OrderItem.objects.filter(user=request.user, ordered=False) 
+    # If the customer has no order yet.
+    if not order.exists():
+        return no_order_yet(request, 'collection')
 
     # Get the customer orders. Calculate subtotal and total.    
     # The subtotal and total is the same due to had no delivery fee charge.
-    customer_order = order.first()    
+    order_items = OrderItem.objects.filter(user=request.user, ordered=False)     
+    customer_order = order.first()           
     customer_items = order_items.all()   
-    all_order = customer_order.items.all().order_by('-id')    
+    all_order = customer_order.items.all().order_by('-id') 
     total = sub_total(request)
-    
-    # If the customer has no order yet.
-    if not order.exists():
-        context = {'customer_exists': order.exists()}   
-        return render(request, 'store/delivery.html', context)    
 
+    collection_form = CollectionForm()    
     if request.method == 'POST':
         collection_form = CollectionForm(request.POST)               
         if collection_form.is_valid():
@@ -802,43 +820,24 @@ def thank_you(request):
 # This where your pending orders show.
 @login_required
 def pending_orders(request):
+    # This will get all what you ordered and display the information that you input.    
+    all_order = Order.objects.filter(user=request.user, ordered=True).order_by('-id')  
+    # If the customer has no order yet.
+    if not all_order.exists():
+        return no_order_yet(request, 'pending orders') 
+     
     add_on = AddOn.objects.all()
     add_on = add_on.first()    
-    # This will get all what you ordered and display the information that you input.
-    all_order = Order.objects.filter(user=request.user, ordered=True).order_by('-id')    
+  
     # The pending orders will appear as long as you don't claim or we didn't delivered yet.
     # The admin has only the access to make the finish_transaction field turns into True.
     payment = Payment.objects.filter(user=request.user, finish_transaction=False).order_by('-id') 
     
     # This function will delete the OrderItem and Delivery or Collection table.    
-    delete_transactions(request)
-
-    # If the customer has no order yet.
-    if not all_order.exists():
-        context = {'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}   
-        return render(request, 'store/delivery.html', context)              
+    delete_transactions(request)           
     
     context = {'all_order': all_order, 'payment': payment, 'add_on': add_on, 'order_quantity': order_quantity(request), 'customer_exists': all_order.exists()}
     return render(request, 'store/pending-orders.html', context)
-
-# This function is for an update item when there is already has the same item and add ons then it will be deleted one of them and add the quantity to the single item.
-def update_duplicate(request, item,  order_item, order_item_id):
-    if order_item.count() > 1:
-        for data in order_item:                   
-            if data.id != order_item_id:
-                duplicate_order_item = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
-                current_order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
-                
-                # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
-                if current_order_item.quantity > duplicate_order_item.quantity:
-                    current_order_item.quantity += duplicate_order_item.quantity
-                    current_order_item.save()
-                    duplicate_order_item.delete()                            
-                    return redirect('store:cart')
-                                     
-                duplicate_order_item.quantity += current_order_item.quantity
-                duplicate_order_item.save()     
-                current_order_item.delete()          
 
 def order_quantity(request):
     if request.user.is_authenticated:
@@ -865,6 +864,25 @@ def sub_total(request):
     else:
         return 0
 
+# This function is for an update item when there is already has the same item and add ons then it will be deleted one of them and add the quantity to the single item.
+def update_duplicate(request, item,  order_item, order_item_id):
+    if order_item.count() > 1:
+        for data in order_item:                   
+            if data.id != order_item_id:
+                duplicate_order_item = OrderItem.objects.get(id=data.id, user=request.user, item=item, ordered=False, in_cart=True)                                       
+                current_order_item = OrderItem.objects.get(id=order_item_id, user=request.user, item=item, ordered=False, in_cart=True)                                                                                    
+                
+                # When the item quantity is more than the quantity of its duplicate then delete the other duplicate and add the quantity of that dupilcate.
+                if current_order_item.quantity > duplicate_order_item.quantity:
+                    current_order_item.quantity += duplicate_order_item.quantity
+                    current_order_item.save()
+                    duplicate_order_item.delete()                            
+                    return redirect('store:cart')
+                                     
+                duplicate_order_item.quantity += current_order_item.quantity
+                duplicate_order_item.save()     
+                current_order_item.delete()          
+
 # This function will delete all the OrderItem, Delivery or Collection if the customer transaction is finish.
 def delete_transactions(request):
     transaction_completed = Payment.objects.filter(user=request.user, finish_transaction=True).order_by('-id') 
@@ -878,3 +896,19 @@ def delete_transactions(request):
         # Then that Order table will be deleted.
         for data in transaction_completed:
             data.order.delete()        
+
+# This function will display the page if the customer has no order yet.
+def no_order_yet(request, page_header_title):   
+    # If the customer has no order yet.
+    context = {'page_header_title': page_header_title, 'order_quantity': order_quantity(request)}   
+    return render(request, 'store/order-first.html', context) 
+
+# This function will check the item if it is in the favorite list.
+def in_favorite_list(request, item):
+    favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
+    is_favorite = False    
+    
+    if favorite_list:
+        is_favorite = True
+        
+    return is_favorite

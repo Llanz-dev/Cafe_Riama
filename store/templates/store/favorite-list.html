@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+<div class="container-lg my-5">
+    <div class="order-1 col-md-8">                
+    <h2 class="mb-5">Favorites <img src="{% static 'icons/favorite-heart.png' %}" alt="Heart image"></h2>               
+        <div class="scroll-activate">                 
+          {% for item in favorite_item %}
+            <div class="row">
+              <div class="col-2">
+                <img src="{{ item.item.image.url }}" alt="product-img" class="img-fluid">
+              </div>
+              <div class="col-10">
+                <span class="text-uppercase letter-spacing border px-2" style="font-size: 14px;">{{ item.item.category }}</span>                                          
+                {% if item.item.category == 'Coffee Classics' or item.item.category == 'Special Latte' %}                                          
+                  <h5 class="mt-2"><a href="{{ item.item.detail_caffeinated_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
+                {% elif item.item.category == 'Frappe' or item.item.category == 'Other Drinks' %}
+                  <h5 class="mt-2"><a href="{{ item.item.detail_coolers_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
+                {% elif item.item.category == 'Starters' or item.item.category == 'Silog Meals' or item.item.category == 'Burger with Fries' or item.item.category == 'Pasta' %}
+                  <h5 class="mt-2"><a href="{{ item.item.detail_only_water_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
+                {% elif item.item.category == 'Pizza' %}
+                  <h5 class="mt-2"><a href="{{ item.item.detail_pizza_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
+                {% elif item.item.category == 'All About Wings' or item.item.category == 'Main Course' or item.item.category == 'Sizzlers' %}
+                  <h5 class="mt-2"><a href="{{ item.item.detail_main_url }}" class="text-decoration-none text-white">{{ item.item.name }}</a><span class="float-end mx-2">₱ {{ item.item.price|intcomma }}</span></h5>
+                {% endif %}      
+                <div style="margin: 1rem 0;"></div>   
+                <a href="{% url 'store:remove-favorite' item.item.item_slug %}" class="text-light text-decoration-none">Remove</a>
+              </div>
+              <hr class="my-5">
+            </div>
+          {% endfor %}  
+        </div>  
+
+        </div>  
+    </div>
+</div>
+{% endblock content %}
+    
