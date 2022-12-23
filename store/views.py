@@ -904,11 +904,14 @@ def no_order_yet(request, page_header_title):
     return render(request, 'store/order-first.html', context) 
 
 # This function will check the item if it is in the favorite list.
+@login_required
 def in_favorite_list(request, item):
-    favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
-    is_favorite = False    
-    
-    if favorite_list:
-        is_favorite = True
+    if request.user.is_authenticated:
+        favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
+        is_favorite = False    
+
+        if favorite_list:
+            is_favorite = True
+
+        return is_favorite
         
-    return is_favorite

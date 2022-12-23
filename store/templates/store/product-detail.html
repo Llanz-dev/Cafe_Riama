@@ -142,6 +142,7 @@
 
 
 {% block file_script %}
+  <!-- This JavaScript file is only for caffeinated drinks -->
   {% if item.category == 'Special Latte' or item.category == 'Coffee Classics' %}                             
     <script src="{% static 'store/js/product-detail-caffeinated.js' %}"></script>
   {% endif %}

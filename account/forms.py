@@ -9,7 +9,7 @@ GENDER_CHOICES = (
     ('FEMALE', 'FEMALE')
 )
 
-class CustomerForm(forms.ModelForm):
+class GenderForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['gender']
@@ -24,4 +24,10 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'password1', 'password2']
+
+class CustomerUpdateForm(forms.ModelForm):
+    username = forms.CharField(label='Username')
+    class Meta:
+        model = User
+        fields = ['username', 'first_name']        
         

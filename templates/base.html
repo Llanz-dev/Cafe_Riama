@@ -78,9 +78,9 @@
                   Favorites
                 </a>
               </li>               
-              <li class="nav-item border border-light">
-                <a class="nav-link active">
-                  {{ request.user.username }}
+              <li class="nav-item">
+                <a href="{% url 'account:profile' %}" class="nav-link active">
+                  Profile
                 </a>
               </li> 
               <li class="nav-item">

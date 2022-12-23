@@ -29,6 +29,10 @@ a.disabled {
   cursor: default;
 }
 
+.white-transition-button {
+  background-color: inherit;
+}
+
 .white-transition-button:hover{
     background-color: white;
     transition: .20s;

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container-lg my-5">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    <h2 class="letter-spacing text-uppercase fw-bold my-5">Profile</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ customer_update_form.as_p }}
+        {{ gender_form }}
+        <div style="margin-top: 3rem;"></div>
+        <a href="{% url 'account:delete-user' %}" class="btn btn-danger px-3 py-2 text-decoration-none" type="submit">Delete Account</a>
+        <button class="border border-secondary px-3 py-2 text-white text-decoration-none white-transition-button" type="submit">Update</button>
+        <div style="margin-bottom: 20.3rem;"></div>
+    </form>
+</div>
+{% endblock content %}
+    
