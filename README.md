@@ -74,4 +74,12 @@ Install the Cafe_Riama with the following:
 - [bootstrapious.com](https://bootstrapious.com/p/bootstrap-footer-bottom) 
 - [ikea.com](https://www.ikea.com/gb/en/shoppingcart/) 
 
-
+## Badges
+![open source](https://img.shields.io/badge/Open%20Source-%F0%9F%92%9A-white)
+![GitHub contributors](https://img.shields.io/github/contributors/Llanz-dev/Cafe_Riama)
+![downloads](https://img.shields.io/github/downloads/Llanz-dev/Cafe_Riama/total)
+![Django](https://img.shields.io/badge/django-4.1.1-brightgreen)
+![forks](https://img.shields.io/github/last-commit/Llanz-dev/Cafe_Riama)
+![followers](https://img.shields.io/github/followers/Llanz-dev?style=social)
+![stars](https://img.shields.io/github/stars/Llanz-dev?style=social)
+![forks](https://img.shields.io/github/forks/Llanz-dev/Cafe_Riama?style=social)
