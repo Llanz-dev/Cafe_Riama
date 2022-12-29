@@ -57,7 +57,10 @@ def home(request):
       
 # This kind of detail is only for the category of Caffeinated.
 def detail_caffeinated(request, item_slug):
-    item = Item.objects.get(item_slug=item_slug)                                        
+    
+    item = Item.objects.get(item_slug=item_slug)      
+    print('in_favorite_list:', in_favorite_list(request, item))                                       
+                                      
     caffeinated_form = CaffeinatedForm()
     add_on = AddOn.objects.all()
     add_on = add_on.first()
@@ -127,7 +130,7 @@ def detail_caffeinated(request, item_slug):
                 instance.save()                  
             return redirect('store:cart')                                                                                                                                 
         else:
-            return redirect('account:sign-in')                                              
+            return redirect('account:sign-in')       
         
     context = {'item': item, 'caffeinated_form': caffeinated_form, 'add_on': add_on, 'in_favorite_list': in_favorite_list(request, item), 'order_quantity': order_quantity(request)}
     return render(request, 'store/product-detail.html', context)
@@ -905,10 +908,12 @@ def no_order_yet(request, page_header_title):
 
 # This function will check the item if it is in the favorite list.
 def in_favorite_list(request, item):
-    favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
-    is_favorite = False    
-    
-    if favorite_list:
-        is_favorite = True
-        
-    return is_favorite
+    if request.user.is_authenticated:
+        favorite_list = FavoriteItem.objects.filter(user=request.user, item=item).first()
+        is_favorite = False    
+
+        if favorite_list:
+            is_favorite = True
+
+        return is_favorite
+    return False
