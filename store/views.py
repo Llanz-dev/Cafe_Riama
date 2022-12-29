@@ -917,8 +917,4 @@ def in_favorite_list(request, item):
             is_favorite = True
 
         return is_favorite
-<<<<<<< HEAD
-        
-=======
     return False
->>>>>>> editing
