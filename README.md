@@ -4,7 +4,7 @@
 ## Description
 Cafe_Riama is an e-commerce website where you can choose 12 types of products. Cafe Riama is located in Iloilo City, Philippines.
 
-- I build this project to solve the many time's problems of Cafe Riama coffee shop encountered.
+- I build this project to solve the many time's problems Cafe Riama coffee shop encountered.
 - This solves the problem of the shop where customers always tell the staff that they don't order the given items. Now, there are no reasons anymore because they have their listed orders and the information that the customer input before they will place their orders.
 - I learned how to query and use the database more and somehow how to use function as a reusable code.
 
@@ -35,7 +35,7 @@ Install the Cafe_Riama with the following:
 ![home3](screenshots/home3.png?raw=true)
 ![home4](screenshots/home4.png?raw=true)
 ![home5](screenshots/home5.png?raw=true)
-#### Let's say you click the cappuccino. Now you can choose your options and add-ons to it. Click add to cart button when you are finished. Remember, you will be redirect to sign in page if you don't sign in yet that you just click the add to cart button.
+#### Let's say you click the cappuccino. Now you can choose your options and add-ons to it. Click add to cart button when you are finished. Remember, you will be redirected to the sign-in page if you don't sign in yet and you just click the add to cart button.
 ![caffeinated detail](screenshots/caffeinated-detail.png?raw=true)
 #### There is now your order item. You can click the up and down button to increase or decrease your item quantity. You could also remove it.
 ![cart1](screenshots/cart1.png?raw=true) 
@@ -53,19 +53,19 @@ Install the Cafe_Riama with the following:
 ![pizza update](screenshots/pizza-update.png?raw=true)
 #### The price of the Ham & Cheese increases due to your add-ons on it after you update.
 ![cart 4](screenshots/cart4.png?raw=true)
-#### When you add the quantity of the Ham & Cheese it will also increase the price and the subtotal accordingly. Click the continue to checkout the blue button.
+#### When you add the quantity of Ham & Cheese it will also increase the price and the subtotal accordingly. Click the continue to checkout the blue button.
 ![cart 5](screenshots/cart5.png?raw=true)
-#### You have two options on how you want to get your order. Whether it is delivery or collection. Click the edit link on right side if you want to update or there is something you missed out.
+#### You have two options on how you want to get your order. Whether it is delivery or collection. Click the Edit link on the right side if you want to update or if there is something you missed out.
 ![continue to checkout](screenshots/checkout.png?raw=true)
-#### The collection process is you will be the one to collect your order from their store. This is your collection fields. Click the blue button to place your order.
+#### The collection process is you will be the one to collect your order from their store. This is your collection field. Click the blue button to place your order.
 ![collection](screenshots/collection.png?raw=true)
-#### Delivery will deliver them to you only around Iloilo City. There is your delivery fields. Input correctly your district location and choose between labels.
+#### Delivery will deliver them to you only around Iloilo City. There are your delivery fields. Input correctly your district location and choose between labels.
 ![delivery1](screenshots/delivery1.png?raw=true)
-#### Click the blue button to place your order. Remember, your delivery fee is base on where your district is located.
+#### Click the blue button to place your order. Remember, your delivery fee is based on where your district is located.
 ![delivery2](screenshots/delivery2.png?raw=true)
 #### This will appear after you place your order and then it will disappear after 1.5 seconds.
 ![thank-you](screenshots/thank-you.png?raw=true)
-#### This is what it looks like your pending orders. It displays all the information that you input. The admin will finish_transaction turns in Payment table into True and this will be deleted.
+#### This is what it looks like for your pending orders. It displays all the information that you input. The admin will make the finish_transaction field turns into True if the transaction is finished, then all the items that were in the Payment table will be deleted.
 ![pending-orders](screenshots/pending-orders.png?raw=true)
 
 ## Acknowledgment
